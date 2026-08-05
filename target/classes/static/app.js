@@ -223,3 +223,4 @@ function eliminarAsignatura(id) {
         // Aquí iría tu fetch DELETE apuntando a tu API
     }
 }
+
