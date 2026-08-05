@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Académico - Menú Principal</title>
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        /* Estilos específicos para centrar el menú principal */
+        .menu-container {
+            max-width: 600px;
+            margin: 80px auto;
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .menu-container h1 {
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+        .menu-container p {
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+        .menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .menu-links a {
+            background-color: #2563eb;
+            color: white;
+            padding: 14px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        .menu-links a:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-container">
+        <h1>Sistema Académico</h1>
+        <p>Selecciona el módulo al que deseas ingresar:</p>
+        <div class="menu-links">
+            <a href="/pagina-terceros">Gestión de Terceros</a>
+            <a href="/pagina-programas">Gestión de Programas</a>
+            <a href="/pagina-asignaturas">Gestión de Asignaturas</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Programas</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Gestión de Programas</h1>
+            <nav>
+                <a href="/terceros">Terceros</a>
+                <a href="/programas">Programas</a>
+                <a href="/asignaturas">Asignaturas</a>
+            </nav>
+        </header>
+
+        <section class="form-section">
+            <h2>Registrar Nuevo Programa</h2>
+            <form id="form-programa">
+                <div class="form-grid">
+                    <input type="number" id="progId" placeholder="ID del Programa (PROG_ID)" required>
+                    <input type="text" id="progPrograma" placeholder="Nombre del Programa (PROG_PROGRAMA)" required>
+                </div>
+                <button type="submit" class="btn-primary">Guardar Programa</button>
+            </form>
+        </section>
+
+        <section class="table-section">
+            <h2>Listado de Programas</h2>
+            <table id="tabla-programas">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre del Programa</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Los datos se inyectarán aquí mediante JavaScript -->
+                </tbody>
+            </table>
+        </section>
+    </div>
+    <!-- Enlazamos el archivo JavaScript -->
+    <script src="/app.js"></script>
+</body>
+</html>

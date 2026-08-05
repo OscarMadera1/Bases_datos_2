@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Terceros</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Gestión de Terceros</h1>
+            <nav>
+                <a href="/terceros">Terceros</a>
+                <a href="/programas">Programas</a>
+                <a href="/asignaturas">Asignaturas</a>
+            </nav>
+        </header>
+
+        <section class="form-section">
+            <h2>Registrar Nuevo Tercero</h2>
+            <form id="form-tercero">
+                <div class="form-grid">
+                    <input type="number" id="tercId" placeholder="ID (TERC_ID)" required>
+                    <select id="tercTipoDoc" required>
+                        <option value="">Tipo de Documento</option>
+                        <option value="CC">Cédula de Ciudadanía</option>
+                        <option value="TI">Tarjeta de Identidad</option>
+                        <option value="CE">Cédula de Extranjería</option>
+                    </select>
+                    <input type="text" id="tercNroDoc" placeholder="Número Documento" required>
+                    <select id="tercGenero" required>
+                        <option value="">Género</option>
+                        <option value="M">Masculino</option>
+                        <option value="F">Femenino</option>
+                        <option value="O">Otro</option>
+                    </select>
+                    <input type="text" id="tercNombres" placeholder="Nombres" required>
+                    <input type="text" id="tercApellidos" placeholder="Apellidos" required>
+                    <input type="text" id="tercDirec" placeholder="Dirección">
+                    <input type="email" id="tercCorreo" placeholder="Correo Electrónico">
+                    <input type="tel" id="tercMovil" placeholder="Teléfono Móvil">
+                    <select id="tercTipo" required>
+                        <option value="">Tipo de Tercero</option>
+                        <option value="E">Estudiante</option>
+                        <option value="D">Docente</option>
+                        <option value="A">Administrativo</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary">Guardar Tercero</button>
+            </form>
+        </section>
+
+        <section class="table-section">
+            <h2>Listado de Terceros</h2>
+            <table id="tabla-terceros">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Documento</th>
+                        <th>Nombres</th>
+                        <th>Apellidos</th>
+                        <th>Correo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Los datos se inyectarán aquí mediante JavaScript -->
+                </tbody>
+            </table>
+        </section>
+    </div>
+    <script src="/app.js"></script>
+</body>
+</html>
