@@ -5,18 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eff6ea3d-5110-4523-9f0e-bb4a01413b08" name="Changes" comment="paquetes, clases terceros, configuración base de datos y prueba de conexión">
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_4_08_26,_8_45 PM_[Changes]/shelved.patch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_4_08_26__8_45PM__Changes_.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/DemoApplication.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/config/ConexionOracle.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/controllers/TerceroController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/dto/TerceroRequest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/dto/TerceroResponse.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/repository/TerceroRepository.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/services/TerceroService.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/services/impl/TerceroServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/BasesDeDatos/demo/config/ConexionOracle.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/BasesDeDatos/demo/controllers/TerceroController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/BasesDeDatos/demo/dto/TerceroRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/BasesDeDatos/demo/dto/TerceroResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/BasesDeDatos/demo/repository/TerceroRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/BasesDeDatos/demo/services/TerceroService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/BasesDeDatos/demo/services/impl/TerceroServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/BasesDeDatos/demo/DemoApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/BasesDeDatos/demo/DemoApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/DemoApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/DemoApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/config/ConexionOracle.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/config/ConexionOracle.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/controllers/TerceroController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/dto/TerceroRequest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/dto/TerceroResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/repository/TerceroRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/services/TerceroService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/services/impl/TerceroServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/BasesDeDatos/demo/DemoApplicationTests.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,61 +73,61 @@
 }</component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000000006787957" />
-      <entry key="MS500" value="1.022779680034652" />
-      <entry key="S2" value="2.2835132682075" />
-      <entry key="S5" value="5.267689747434678" />
-      <entry key="S10" value="8.90868198755862" />
-      <entry key="S30" value="16.049206836753367" />
-      <entry key="S60" value="19.826076743440215" />
-      <entry key="M2" value="22.45518334634254" />
-      <entry key="M5" value="24.492115323836106" />
-      <entry key="M10" value="26.27321492577362" />
-      <entry key="M15" value="28.846895488865854" />
-      <entry key="M30" value="36.9867468733699" />
-      <entry key="H1" value="46.72687278809507" />
-      <entry key="H2" value="54.42796859553199" />
-      <entry key="H4" value="59.294790630308576" />
-      <entry key="D1" value="63.984945181388554" />
-      <entry key="W1" value="64.85333601116454" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0000000000003475" />
+      <entry key="S10" value="1.0000011274118583" />
+      <entry key="S30" value="1.0421316128041382" />
+      <entry key="S60" value="1.9823435256069737" />
+      <entry key="M2" value="7.069345121930713" />
+      <entry key="M5" value="23.34294094962448" />
+      <entry key="M10" value="39.05773605092674" />
+      <entry key="M15" value="48.25897212935219" />
+      <entry key="M30" value="64.56630262870259" />
+      <entry key="H1" value="80.10114050755718" />
+      <entry key="H2" value="91.87032281454367" />
+      <entry key="H4" value="99.28031924316727" />
+      <entry key="D1" value="106.44454454453009" />
+      <entry key="W1" value="107.77512845894452" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="0.0" />
-      <entry key="S2" value="3.0866039651735254E-257" />
-      <entry key="S5" value="2.487667680559467E-103" />
-      <entry key="S10" value="4.98765243432165E-52" />
-      <entry key="S30" value="7.93046636133585E-18" />
-      <entry key="S60" value="2.816108372016036E-9" />
-      <entry key="M2" value="5.3067551224155336E-5" />
-      <entry key="M5" value="0.019690663709902665" />
-      <entry key="M10" value="0.1536028997242422" />
-      <entry key="M15" value="0.3271641462975299" />
-      <entry key="M30" value="0.759670183179974" />
-      <entry key="H1" value="1.2110675153022148" />
-      <entry key="H2" value="1.549256885476052" />
-      <entry key="H4" value="1.758242675620869" />
-      <entry key="D1" value="1.9572012880091068" />
-      <entry key="W1" value="1.9938212748852502" />
+      <entry key="MS500" value="3.7010260911292613E-199" />
+      <entry key="S2" value="3.6946583445326744E-50" />
+      <entry key="S5" value="2.5258253134795456E-20" />
+      <entry key="S10" value="2.2429699906887783E-10" />
+      <entry key="S30" value="9.64040411033998E-4" />
+      <entry key="S60" value="0.04390739690803964" />
+      <entry key="M2" value="0.29633182270063435" />
+      <entry key="M5" value="0.9347709570197407" />
+      <entry key="M10" value="1.4247045139828454" />
+      <entry key="M15" value="1.7244347488769758" />
+      <entry key="M30" value="2.314905353326089" />
+      <entry key="H1" value="2.910847037894258" />
+      <entry key="H2" value="3.369003243209794" />
+      <entry key="H4" value="3.6586173382844303" />
+      <entry key="D1" value="3.939070090416729" />
+      <entry key="W1" value="3.991190668256343" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9659363295715137" />
-      <entry key="MS500" value="1.0156712297232924" />
-      <entry key="S2" value="2.279214835604843" />
-      <entry key="S5" value="5.263431409957475" />
-      <entry key="S10" value="8.904795806604355" />
-      <entry key="S30" value="16.045747440598337" />
-      <entry key="S60" value="19.82102943183793" />
-      <entry key="M2" value="22.44956628205251" />
-      <entry key="M5" value="24.507764540326615" />
-      <entry key="M10" value="26.423568950141735" />
-      <entry key="M15" value="29.170615481568603" />
-      <entry key="M30" value="37.74255963398124" />
-      <entry key="H1" value="47.934671753310745" />
-      <entry key="H2" value="55.9750467026176" />
-      <entry key="H4" value="61.0517693298853" />
-      <entry key="D1" value="65.94190750469289" />
-      <entry key="W1" value="66.84712239597998" />
+      <entry key="MS100" value="0.8645372313078652" />
+      <entry key="MS500" value="0.9713074955416333" />
+      <entry key="S2" value="0.992748375440308" />
+      <entry key="S5" value="0.9970930153283798" />
+      <entry key="S10" value="0.9985465739524132" />
+      <entry key="S30" value="1.0425345539781679" />
+      <entry key="S60" value="2.0249563536457598" />
+      <entry key="M2" value="7.362371941129943" />
+      <entry key="M5" value="24.273269049334576" />
+      <entry key="M10" value="40.478404620265366" />
+      <entry key="M15" value="49.97947984471217" />
+      <entry key="M30" value="66.87720818243939" />
+      <entry key="H1" value="83.00856467109197" />
+      <entry key="H2" value="95.23698676934151" />
+      <entry key="H4" value="102.93755600399705" />
+      <entry key="D1" value="110.38334928757145" />
+      <entry key="W1" value="111.76628026815429" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -213,6 +222,17 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="paquetes, clases terceros, configuración base de datos y prueba de conexión" />
