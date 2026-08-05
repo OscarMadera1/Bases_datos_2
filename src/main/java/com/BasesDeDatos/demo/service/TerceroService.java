@@ -35,4 +35,22 @@ public class TerceroService {
             tercero.getTipo()
         );
     }
+
+        //Metodo para actualizar con el procedimiento de actualizacion
+    @Transactional
+    public void actualizarTercero(Tercero tercero){
+        terceroRepository.actualizarTercero(
+            tercero.getId(),
+            tercero.getTipoDoc(),
+            tercero.getNroDoc(),
+            tercero.getGenero()
+        );
+    }
+
+        //Metodo para elminar con el procedimiento de eliminacion
+        @Transactional
+        public void eliminarTercero(Long id){
+            terceroRepository.eliminarTercero(id);
+        }
+
 }
