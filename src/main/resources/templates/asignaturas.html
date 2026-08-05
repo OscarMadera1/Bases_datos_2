@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Asignaturas</title>
+    <!-- Reutilizamos el mismo archivo de estilos -->
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Gestión de Asignaturas</h1>
+            <nav>
+                <a href="/terceros">Terceros</a>
+                <a href="/programas">Programas</a>
+                <a href="/asignaturas">Asignaturas</a>
+            </nav>
+        </header>
+
+        <section class="form-section">
+            <h2>Registrar Nueva Asignatura</h2>
+            <form id="form-asignatura">
+                <div class="form-grid">
+                    <input type="number" id="asigId" placeholder="ID (ASIG_ID)" required>
+                    <input type="text" id="asigAsignatura" placeholder="Nombre de la Asignatura" required>
+                    <input type="number" id="asigCreditos" placeholder="Número de Créditos" required>
+                    <input type="text" id="asigCodigo" placeholder="Código (Máx 6 caracteres)" maxlength="6" required>
+                </div>
+                <button type="submit" class="btn-primary">Guardar Asignatura</button>
+            </form>
+        </section>
+
+        <section class="table-section">
+            <h2>Listado de Asignaturas</h2>
+            <table id="tabla-asignaturas">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Asignatura</th>
+                        <th>Créditos</th>
+                        <th>Código</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Los datos se inyectarán aquí mediante JavaScript -->
+                </tbody>
+            </table>
+        </section>
+    </div>
+    <!-- Enlazamos el archivo JavaScript global -->
+    <script src="/app.js"></script>
+</body>
+</html>
