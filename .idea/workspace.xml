@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="eff6ea3d-5110-4523-9f0e-bb4a01413b08" name="Changes" comment="paquetes, clases terceros, configuración base de datos y prueba de conexión">
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_4_08_26,_8_45 PM_[Changes]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_4_08_26__8_45PM__Changes_.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/DemoApplication.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/config/ConexionOracle.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/controllers/TerceroController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/dto/TerceroRequest.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/dto/TerceroResponse.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/repository/TerceroRepository.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/services/TerceroService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/BasesDeDatos/demo/services/impl/TerceroServiceImpl.class" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_/Users/oscar_madera/Documents/Proyecto bases de datos/Bases_datos_2" value="3HT24AWazStJR7mxm3b0wgaM01j" />
+    </persistenceIdMap>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="package-info" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;OscarMadera1&quot;
+  }
+}</component>
+  <component name="GithubDefaultAccount">
+    <option name="defaultAccountId" value="e7d56312-721c-40ad-b68f-dac0b351de58" />
+  </component>
+  <component name="GithubProjectSettings">
+    <option name="branchProtectionPatterns">
+      <list>
+        <option value="main" />
+      </list>
+    </option>
+  </component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/OscarMadera1/Bases_datos_2.git&quot;,
+    &quot;accountId&quot;: &quot;e7d56312-721c-40ad-b68f-dac0b351de58&quot;
+  }
+}</component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.0000000006787957" />
+      <entry key="MS500" value="1.022779680034652" />
+      <entry key="S2" value="2.2835132682075" />
+      <entry key="S5" value="5.267689747434678" />
+      <entry key="S10" value="8.90868198755862" />
+      <entry key="S30" value="16.049206836753367" />
+      <entry key="S60" value="19.826076743440215" />
+      <entry key="M2" value="22.45518334634254" />
+      <entry key="M5" value="24.492115323836106" />
+      <entry key="M10" value="26.27321492577362" />
+      <entry key="M15" value="28.846895488865854" />
+      <entry key="M30" value="36.9867468733699" />
+      <entry key="H1" value="46.72687278809507" />
+      <entry key="H2" value="54.42796859553199" />
+      <entry key="H4" value="59.294790630308576" />
+      <entry key="D1" value="63.984945181388554" />
+      <entry key="W1" value="64.85333601116454" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="3.0866039651735254E-257" />
+      <entry key="S5" value="2.487667680559467E-103" />
+      <entry key="S10" value="4.98765243432165E-52" />
+      <entry key="S30" value="7.93046636133585E-18" />
+      <entry key="S60" value="2.816108372016036E-9" />
+      <entry key="M2" value="5.3067551224155336E-5" />
+      <entry key="M5" value="0.019690663709902665" />
+      <entry key="M10" value="0.1536028997242422" />
+      <entry key="M15" value="0.3271641462975299" />
+      <entry key="M30" value="0.759670183179974" />
+      <entry key="H1" value="1.2110675153022148" />
+      <entry key="H2" value="1.549256885476052" />
+      <entry key="H4" value="1.758242675620869" />
+      <entry key="D1" value="1.9572012880091068" />
+      <entry key="W1" value="1.9938212748852502" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="0.9659363295715137" />
+      <entry key="MS500" value="1.0156712297232924" />
+      <entry key="S2" value="2.279214835604843" />
+      <entry key="S5" value="5.263431409957475" />
+      <entry key="S10" value="8.904795806604355" />
+      <entry key="S30" value="16.045747440598337" />
+      <entry key="S60" value="19.82102943183793" />
+      <entry key="M2" value="22.44956628205251" />
+      <entry key="M5" value="24.507764540326615" />
+      <entry key="M10" value="26.423568950141735" />
+      <entry key="M15" value="29.170615481568603" />
+      <entry key="M30" value="37.74255963398124" />
+      <entry key="H1" value="47.934671753310745" />
+      <entry key="H2" value="55.9750467026176" />
+      <entry key="H4" value="61.0517693298853" />
+      <entry key="D1" value="65.94190750469289" />
+      <entry key="W1" value="66.84712239597998" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3HT24DO545fuyaTiHBAbFS1poBv" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectSessionTemplates">
+    <option name="panelTemplate">
+      <template>
+        <option name="modeId" value="Agent" />
+        <option name="model">
+          <model>
+            <option name="modelType" value="builtin_id" />
+            <option name="modelValue" value="auto" />
+          </model>
+        </option>
+        <option name="targetType" value="BACKGROUND" />
+        <option name="worktreeMode" value="WORKSPACE" />
+      </template>
+    </option>
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.DemoApplication.executor": "Run",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "copilot.chat.legacySessionMetadata.migrated": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/oscar_madera/Documents/Proyecto bases de datos/Bases_datos_2",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="DemoApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UnknownPolicyInFreeMode" />
+      <module name="demo" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.BasesDeDatos.demo.DemoApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.BasesDeDatos.demo.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.DemoApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-63390994e64e-intellij.indexing.shared.core-IU-262.8665.337" />
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.8665.337" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="eff6ea3d-5110-4523-9f0e-bb4a01413b08" name="Changes" comment="" />
+      <created>1785877544427</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1785877544427</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="paquetes, clases terceros, configuración base de datos y prueba de conexión" />
+    <option name="LAST_COMMIT_MESSAGE" value="paquetes, clases terceros, configuración base de datos y prueba de conexión" />
+  </component>
+</project>
