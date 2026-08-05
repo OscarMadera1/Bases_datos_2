@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -36,5 +37,18 @@ public class TerceroController {
         //Redirige a la lista
         return "redirect:/terceros";
     }
-    
+
+    //Metodo para actualizar datos desde la web
+    @PostMapping
+    public String actualizarTercero(@ModelAttribute("tercero") Tercero tercero){
+        terceroService.actualizarTercero(tercero);
+        return "redirect:/terceros";
+    }
+
+    //Eliminar un tercero por su ID
+    @GetMapping("/eliminar/{id}")
+    public String eliminarTercero(@PathVariable("id") Long id){
+        terceroService.eliminarTercero(id);
+        return "redirect:/terceros";
+    }
 }
