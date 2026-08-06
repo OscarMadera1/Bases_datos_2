@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,43 +8,38 @@
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Gestión de Programas</h1>
-            <nav>
-                <a href="/terceros">Terceros</a>
-                <a href="/programas">Programas</a>
-                <a href="/asignaturas">Asignaturas</a>
-            </nav>
-        </header>
+        <h1>Gestión de Programas</h1>
+        <a href="/" class="btn-back">Volver al Menú Principal</a>
 
-        <section class="form-section">
+        <!-- Formulario -->
+        <form th:action="@{/programas/guardar}" th:object="${programa}" method="post" class="form-card">
             <h2>Registrar Nuevo Programa</h2>
-            <form id="form-programa">
-                <div class="form-grid">
-                    <input type="number" id="progId" placeholder="ID del Programa (PROG_ID)" required>
-                    <input type="text" id="progPrograma" placeholder="Nombre del Programa (PROG_PROGRAMA)" required>
-                </div>
-                <button type="submit" class="btn-primary">Guardar Programa</button>
-            </form>
-        </section>
+            <div class="form-grid">
+                <input type="number" th:field="*{id}" placeholder="ID Programa" required>
+                <input type="text" th:field="*{nombre}" placeholder="Nombre del Programa" maxlength="100" required>
+            </div>
+            <button type="submit" class="btn-primary">Guardar Programa</button>
+        </form>
 
-        <section class="table-section">
-            <h2>Listado de Programas</h2>
-            <table id="tabla-programas">
+        <!-- Tabla -->
+        <div class="table-card">
+            <h2>Lista de Programas Registrados</h2>
+            <table>
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Nombre del Programa</th>
-                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Los datos se inyectarán aquí mediante JavaScript -->
+                    <tr th:each="p : ${programas}">
+                        <td th:text="${p.id}"></td>
+                        <td th:text="${p.nombre}"></td>
+                    </tr>
                 </tbody>
             </table>
-        </section>
+        </div>
     </div>
-    <!-- Enlazamos el archivo JavaScript -->
     <script src="/app.js"></script>
 </body>
 </html>
