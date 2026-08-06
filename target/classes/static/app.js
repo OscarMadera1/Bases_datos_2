@@ -1,11 +1,9 @@
-// para terceros
-
-// Inicialización global de DataTables y gestión del Modal de Terceros
-let myModal;
+// Instancias globales para los modales
+let modalTercero, modalPrograma, modalAsignatura;
 
 $(document).ready(function() {
-    // Configurar y traducir DataTable al español
-    $('#tablaTerceros').DataTable({
+    // 1. Inicializar DataTables con configuración en español
+    const dtOptions = {
         language: {
             processing: "Procesando...",
             search: "Buscar:",
@@ -15,50 +13,36 @@ $(document).ready(function() {
             infoFiltered: "(filtrado de un total de _MAX_ registros)",
             zeroRecords: "No se encontraron resultados",
             emptyTable: "Ningún dato disponible en esta tabla",
-            paginate: {
-                first: "Primero",
-                previous: "Anterior",
-                next: "Siguiente",
-                last: "Último"
-            },
-            aria: {
-                sortAscending: ": Activar para ordenar la columna de manera ascendente",
-                sortDescending: ": Activar para ordenar la columna de manera descendente"
-            }
+            paginate: { first: "Primero", previous: "Anterior", next: "Siguiente", last: "Último" }
         }
-    });
+    };
 
-    // Instanciar el modal de Bootstrap de forma segura
-    const modalElement = document.getElementById('terceroModal');
-    if (modalElement) {
-        myModal = new bootstrap.Modal(modalElement);
-    }
+    if ($('#tablaTerceros').length) $('#tablaTerceros').DataTable(dtOptions);
+    if ($('#tablaProgramas').length) $('#tablaProgramas').DataTable(dtOptions);
+    if ($('#tablaAsignaturas').length) $('#tablaAsignaturas').DataTable(dtOptions);
+
+    // 2. Instanciar modales de Bootstrap
+    const elTercero = document.getElementById('terceroModal');
+    if (elTercero) modalTercero = new bootstrap.Modal(elTercero);
+
+    const elPrograma = document.getElementById('programaModal');
+    if (elPrograma) modalPrograma = new bootstrap.Modal(elPrograma);
+
+    const elAsignatura = document.getElementById('asignaturaModal');
+    if (elAsignatura) modalAsignatura = new bootstrap.Modal(elAsignatura);
 });
 
-// Función para abrir el modal en modo Registro limpio
+/* ==================== GESTIÓN DE TERCEROS ==================== */
 function abrirModalRegistrar() {
     const form = document.getElementById('terceroForm');
-    if (form) {
-        form.reset();
-        form.action = '/terceros/guardar';
-    }
-    
-    const tercId = document.getElementById('tercId');
-    if (tercId) tercId.value = '';
-
-    const modalTitle = document.getElementById('modalTitle');
-    if (modalTitle) modalTitle.innerText = 'Registrar Nuevo Tercero';
-
-    const btnSubmit = document.getElementById('btnSubmit');
-    if (btnSubmit) {
-        btnSubmit.innerText = 'Guardar Tercero';
-        btnSubmit.className = 'btn btn-primary';
-    }
-
-    if (myModal) myModal.show();
+    if (form) { form.reset(); form.action = '/terceros/guardar'; }
+    document.getElementById('tercId').value = '';
+    document.getElementById('modalTitle').innerText = 'Registrar Nuevo Tercero';
+    const btn = document.getElementById('btnSubmit');
+    if (btn) { btn.innerText = 'Guardar Tercero'; btn.className = 'btn btn-primary'; }
+    if (modalTercero) modalTercero.show();
 }
 
-// Función para cargar los datos en el modal al hacer clic en Editar
 function editarTercero(id, tipoDoc, nroDoc, genero, nombres, apellidos, direccion, correo, movil, tipo) {
     document.getElementById('tercId').value = id;
     document.getElementById('tipoDoc').value = tipoDoc;
@@ -72,18 +56,60 @@ function editarTercero(id, tipoDoc, nroDoc, genero, nombres, apellidos, direccio
     document.getElementById('tipo').value = tipo;
 
     const form = document.getElementById('terceroForm');
-    if (form) {
-        form.action = '/terceros/actualizar';
+    if (form) form.action = '/terceros/actualizar';
+    document.getElementById('modalTitle').innerText = 'Actualizar Tercero (ID: ' + id + ')';
+    const btn = document.getElementById('btnSubmit');
+    if (btn) { btn.innerText = 'Actualizar Cambios'; btn.className = 'btn btn-warning text-dark fw-bold'; }
+    if (modalTercero) modalTercero.show();
+}
+
+/* ==================== GESTIÓN DE PROGRAMAS ==================== */
+function abrirModalRegistrarPrograma() {
+    const form = document.getElementById('programaForm');
+    if (form) { form.reset(); form.action = '/programas/guardar'; }
+    document.getElementById('progId').value = '';
+    document.getElementById('modalTitleProg').innerText = 'Registrar Nuevo Programa';
+    const btn = document.getElementById('btnSubmitProg');
+    if (btn) { btn.innerText = 'Guardar Programa'; btn.className = 'btn btn-primary'; }
+    if (modalPrograma) modalPrograma.show();
+}
+
+function editarPrograma(id, nombre) {
+    document.getElementById('progId').value = id;
+    document.getElementById('progNombre').value = nombre;
+    const form = document.getElementById('programaForm');
+    if (form) form.action = '/programas/actualizar';
+    document.getElementById('modalTitleProg').innerText = 'Actualizar Programa (ID: ' + id + ')';
+    const btn = document.getElementById('btnSubmitProg');
+    if (btn) { btn.innerText = 'Actualizar Cambios'; btn.className = 'btn btn-warning text-dark fw-bold'; }
+    if (modalPrograma) modalPrograma.show();
+}
+
+/* ==================== GESTIÓN DE ASIGNATURAS ==================== */
+function abrirModalRegistrarAsignatura() {
+    const form = document.getElementById('asignaturaForm');
+    if (form) { form.reset(); form.action = '/asignaturas/guardar'; }
+    document.getElementById('asigCodigo').value = '';
+    document.getElementById('modalTitleAsig').innerText = 'Registrar Nueva Asignatura';
+    const btn = document.getElementById('btnSubmitAsig');
+    if (btn) { btn.innerText = 'Guardar Asignatura'; btn.className = 'btn btn-primary'; }
+    if (modalAsignatura) modalAsignatura.show();
+}
+
+function editarAsignatura(id, asignatura, creditos, codigo) {
+    document.getElementById('asigId').value = id;
+    document.getElementById('asigNombre').value = asignatura;
+    document.getElementById('asigCreditos').value = creditos;
+    document.getElementById('asigCodigo').value = codigo;
+
+    const form = document.getElementById('asignaturaForm');
+    if (form) form.action = '/asignaturas/actualizar';
+    document.getElementById('modalTitleAsig').innerText = 'Actualizar Asignatura (ID: ' + id + ')';
+    
+    const btn = document.getElementById('btnSubmitAsig');
+    if (btn) {
+        btn.innerText = 'Actualizar Cambios';
+        btn.className = 'btn btn-warning text-dark fw-bold';
     }
-
-    const modalTitle = document.getElementById('modalTitle');
-    if (modalTitle) modalTitle.innerText = 'Actualizar Tercero (ID: ' + id + ')';
-
-    const btnSubmit = document.getElementById('btnSubmit');
-    if (btnSubmit) {
-        btnSubmit.innerText = 'Actualizar Cambios';
-        btnSubmit.className = 'btn btn-warning text-dark fw-bold';
-    }
-
-    if (myModal) myModal.show();
+    if (modalAsignatura) modalAsignatura.show();
 }

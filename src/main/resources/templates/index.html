@@ -1,58 +1,93 @@
 <!DOCTYPE html>
-<html lang="es">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Académico - Menú Principal</title>
-    <link rel="stylesheet" href="/style.css">
+    <title>Menú Principal - Sistema de Gestión</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Estilos específicos para centrar el menú principal */
-        .menu-container {
-            max-width: 600px;
-            margin: 80px auto;
-            text-align: center;
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .menu-container h1 {
-            color: #1e293b;
-            margin-bottom: 10px;
-        }
-        .menu-container p {
-            color: #64748b;
-            margin-bottom: 30px;
-        }
-        .menu-links {
+        /* Fondo con imagen institucional y capa oscura para legibilidad */
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), 
+                        url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            gap: 15px;
+            align-items: center;
+            justify-content: center;
         }
-        .menu-links a {
-            background-color: #2563eb;
-            color: white;
-            padding: 14px;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: background-color 0.2s, transform 0.1s;
+        .card-menu {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 1rem;
         }
-        .menu-links a:hover {
-            background-color: #1d4ed8;
-            transform: translateY(-2px);
+        .card-menu:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.3) !important;
         }
     </style>
 </head>
 <body>
-    <div class="menu-container">
-        <h1>Sistema Académico</h1>
-        <p>Selecciona el módulo al que deseas ingresar:</p>
-        <div class="menu-links">
-            <a href="/terceros">Gestión de Terceros</a>
-            <a href="/programas">Gestión de Programas</a>
-            <a href="/asignaturas">Gestión de Asignaturas</a>
+    <div class="container py-5">
+        <!-- Cabecera Institucional -->
+        <div class="text-center text-white mb-5">
+            <span class="badge bg-primary px-3 py-2 mb-2 text-uppercase tracking-wider">Corporación Universitaria Remington</span>
+            <h1 class="display-4 fw-bold">Sistema de Gestión Académica</h1>
+            <p class="lead text-light opacity-75">Seleccione el módulo que desea administrar</p>
+        </div>
+
+        <!-- Tarjetas de Navegación -->
+        <div class="row justify-content-center g-4">
+            <!-- Módulo Terceros -->
+            <div class="col-md-4">
+                <div class="card card-menu h-100 shadow border-0 text-center p-4 bg-white">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="display-5 text-primary mb-3">👥</div>
+                            <h3 class="h4 fw-bold text-dark">Terceros</h3>
+                            <p class="text-muted small">Gestión de usuarios, documentos, perfiles y datos de contacto.</p>
+                        </div>
+                        <a href="/terceros" class="btn btn-dark fw-bold mt-3 w-100">Administrar Terceros</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Módulo Programas -->
+            <div class="col-md-4">
+                <div class="card card-menu h-100 shadow border-0 text-center p-4 bg-white">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="display-5 text-success mb-3">🎓</div>
+                            <h3 class="h4 fw-bold text-dark">Programas</h3>
+                            <p class="text-muted small">Administración de programas académicos y ofertas institucionales.</p>
+                        </div>
+                        <a href="/programas" class="btn btn-dark fw-bold mt-3 w-100">Administrar Programas</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Módulo Asignaturas -->
+            <div class="col-md-4">
+                <div class="card card-menu h-100 shadow border-0 text-center p-4 bg-white">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="display-5 text-warning mb-3">📚</div>
+                            <h3 class="h4 fw-bold text-dark">Asignaturas</h3>
+                            <p class="text-muted small">Control de materias, créditos, códigos y malla curricular.</p>
+                        </div>
+                        <a href="/asignaturas" class="btn btn-dark fw-bold mt-3 w-100">Administrar Asignaturas</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pie de página discreto -->
+        <div class="text-center text-white-50 mt-5 small">
+            &copy; 2026 Sistema Integrado de Base de Datos - Uniremington
         </div>
     </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
