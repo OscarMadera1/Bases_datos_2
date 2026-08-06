@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,52 +8,31 @@
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Gestión de Terceros</h1>
-            <nav>
-                <a href="/terceros">Terceros</a>
-                <a href="/programas">Programas</a>
-                <a href="/asignaturas">Asignaturas</a>
-            </nav>
-        </header>
+        <h1>Gestión de Terceros</h1>
+        <a href="/" class="btn-back">Volver al Menú Principal</a>
 
-        <section class="form-section">
+        <!-- Formulario para registrar -->
+        <form th:action="@{/terceros/guardar}" th:object="${tercero}" method="post" class="form-card">
             <h2>Registrar Nuevo Tercero</h2>
-            <form id="form-tercero">
-                <div class="form-grid">
-                    <input type="number" id="tercId" placeholder="ID (TERC_ID)" required>
-                    <select id="tercTipoDoc" required>
-                        <option value="">Tipo de Documento</option>
-                        <option value="CC">Cédula de Ciudadanía</option>
-                        <option value="TI">Tarjeta de Identidad</option>
-                        <option value="CE">Cédula de Extranjería</option>
-                    </select>
-                    <input type="text" id="tercNroDoc" placeholder="Número Documento" required>
-                    <select id="tercGenero" required>
-                        <option value="">Género</option>
-                        <option value="M">Masculino</option>
-                        <option value="F">Femenino</option>
-                        <option value="O">Otro</option>
-                    </select>
-                    <input type="text" id="tercNombres" placeholder="Nombres" required>
-                    <input type="text" id="tercApellidos" placeholder="Apellidos" required>
-                    <input type="text" id="tercDirec" placeholder="Dirección">
-                    <input type="email" id="tercCorreo" placeholder="Correo Electrónico">
-                    <input type="tel" id="tercMovil" placeholder="Teléfono Móvil">
-                    <select id="tercTipo" required>
-                        <option value="">Tipo de Tercero</option>
-                        <option value="E">Estudiante</option>
-                        <option value="D">Docente</option>
-                        <option value="A">Administrativo</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn-primary">Guardar Tercero</button>
-            </form>
-        </section>
+            <div class="form-grid">
+                <input type="number" th:field="*{id}" placeholder="ID (TERC_ID)" required>
+                <input type="text" th:field="*{tipoDoc}" placeholder="Tipo Doc (ej. CC)" maxlength="2" required>
+                <input type="text" th:field="*{nroDoc}" placeholder="Número de Documento" maxlength="10" required>
+                <input type="text" th:field="*{genero}" placeholder="Género (M/F)" maxlength="1" required>
+                <input type="text" th:field="*{nombres}" placeholder="Nombres" maxlength="50" required>
+                <input type="text" th:field="*{apellidos}" placeholder="Apellidos" maxlength="50" required>
+                <input type="text" th:field="*{direccion}" placeholder="Dirección" maxlength="50">
+                <input type="email" th:field="*{correo}" placeholder="Correo Electrónico" maxlength="50">
+                <input type="text" th:field="*{movil}" placeholder="Móvil" maxlength="10">
+                <input type="text" th:field="*{tipo}" placeholder="Tipo" maxlength="1" required>
+            </div>
+            <button type="submit" class="btn-primary">Guardar Tercero</button>
+        </form>
 
-        <section class="table-section">
-            <h2>Listado de Terceros</h2>
-            <table id="tabla-terceros">
+        <!-- Tabla para listar -->
+        <div class="table-card">
+            <h2>Lista de Terceros Registrados</h2>
+            <table>
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -61,14 +40,21 @@
                         <th>Nombres</th>
                         <th>Apellidos</th>
                         <th>Correo</th>
-                        <th>Acciones</th>
+                        <th>Móvil</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Los datos se inyectarán aquí mediante JavaScript -->
+                    <tr th:each="t : ${terceros}">
+                        <td th:text="${t.id}"></td>
+                        <td th:text="${t.tipoDoc + ' ' + t.nroDoc}"></td>
+                        <td th:text="${t.nombres}"></td>
+                        <td th:text="${t.apellidos}"></td>
+                        <td th:text="${t.correo}"></td>
+                        <td th:text="${t.movil}"></td>
+                    </tr>
                 </tbody>
             </table>
-        </section>
+        </div>
     </div>
     <script src="/app.js"></script>
 </body>
