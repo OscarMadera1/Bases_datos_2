@@ -23,7 +23,7 @@ public class TerceroController {
     public String listarTerceros(Model model){
         //Pasa la lista de terceros de la BD a la vista
         model.addAttribute("terceros", terceroService.listarTodos());
-        model.addAttribute("terceros", new Tercero());
+        model.addAttribute("tercero", new Tercero()); // cambié terceros por tercero porque se sobrescribe el objeto del formulario
         return "terceros";
     }
 
@@ -39,7 +39,7 @@ public class TerceroController {
     }
 
     //Metodo para actualizar datos desde la web
-    @PostMapping
+    @PostMapping("/actualizar") // lo añadí para evitar que sobrescriba el controlador general
     public String actualizarTercero(@ModelAttribute("tercero") Tercero tercero){
         terceroService.actualizarTercero(tercero);
         return "redirect:/terceros";

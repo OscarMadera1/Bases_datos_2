@@ -10,19 +10,4 @@ public class VistaController {
     public String index() {
         return "index";
     }
-
-    @GetMapping("/pagina-terceros")
-    public String terceros() {
-        return "terceros";
-    }
-
-    @GetMapping("/pagina-programas")
-    public String programas() {
-        return "programas";
-    }
-
-    @GetMapping("/pagina-asignaturas")
-    public String asignaturas() {
-        return "asignaturas";
-    }
 }
