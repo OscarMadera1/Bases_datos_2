@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,47 +8,42 @@
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Gestión de Asignaturas</h1>
-            <nav>
-                <a href="/terceros">Terceros</a>
-                <a href="/programas">Programas</a>
-                <a href="/asignaturas">Asignaturas</a>
-            </nav>
-        </header>
+        <h1>Gestión de Asignaturas</h1>
+        <a href="/" class="btn-back">Volver al Menú Principal</a>
 
-        <section class="form-section">
+        <form th:action="@{/asignaturas/guardar}" th:object="${asignatura}" method="post" class="form-card">
             <h2>Registrar Nueva Asignatura</h2>
-            <form id="form-asignatura">
-                <div class="form-grid">
-                    <input type="number" id="asigId" placeholder="ID (ASIG_ID)" required>
-                    <input type="text" id="asigAsignatura" placeholder="Nombre de la Asignatura" required>
-                    <input type="number" id="asigCreditos" placeholder="Número de Créditos" required>
-                    <input type="text" id="asigCodigo" placeholder="Código (Máx 6 caracteres)" maxlength="6" required>
-                </div>
-                <button type="submit" class="btn-primary">Guardar Asignatura</button>
-            </form>
-        </section>
+            <div class="form-grid">
+                <input type="number" th:field="*{id}" placeholder="ID Asignatura" required>
+                <input type="text" th:field="*{nombre}" placeholder="Nombre Asignatura" maxlength="100" required>
+                <input type="number" th:field="*{creditos}" placeholder="Créditos" required>
+                <input type="text" th:field="*{codigo}" placeholder="Código" maxlength="20" required>
+            </div>
+            <button type="submit" class="btn-primary">Guardar Asignatura</button>
+        </form>
 
-        <section class="table-section">
-            <h2>Listado de Asignaturas</h2>
-            <table id="tabla-asignaturas">
+        <div class="table-card">
+            <h2>Lista de Asignaturas Registradas</h2>
+            <table>
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Asignatura</th>
+                        <th>Nombre</th>
                         <th>Créditos</th>
                         <th>Código</th>
-                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Los datos se inyectarán aquí mediante JavaScript -->
+                    <tr th:each="a : ${asignaturas}">
+                        <td th:text="${a.id}"></td>
+                        <td th:text="${a.nombre}"></td>
+                        <td th:text="${a.creditos}"></td>
+                        <td th:text="${a.codigo}"></td>
+                    </tr>
                 </tbody>
             </table>
-        </section>
+        </div>
     </div>
-    <!-- Enlazamos el archivo JavaScript global -->
     <script src="/app.js"></script>
 </body>
 </html>
