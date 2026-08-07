@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface AsignaturaRepository extends JpaRepository<Asignatura, Long> {
 
     //Procedimiento crear asignatura
-    @Procedure(procedureName = "HISTORIAS.SP_ING_ASIGNATURAS")
+    @Procedure(procedureName = "SP_ING_ASIGNATURAS")
     void registrarAsignatura(
         @Param("P_ASIGNATURA") String asignatura,
         @Param("P_CREDITOS") Integer creditos,
@@ -18,7 +18,7 @@ public interface AsignaturaRepository extends JpaRepository<Asignatura, Long> {
     );
 
     //Procedimiento actualizar asignatura
-    @Procedure(procedureName = "HISTORIAS.SP_ACT_ASIGNATURAS")
+    @Procedure(procedureName = "SP_ACT_ASIGNATURAS")
     void actualizarAsignatura(
         @Param("CODIGO") Long id,
         @Param("P_ASIGNATURA") String asignatura,
@@ -27,7 +27,7 @@ public interface AsignaturaRepository extends JpaRepository<Asignatura, Long> {
     );
 
     //Procedimiento eliminar asignatura
-    @Procedure(procedureName = "HISTORIAS.SP_ELI_ASIGNATURAS")
+    @Procedure(procedureName = "SP_ELI_ASIGNATURAS")
     void eliminarAsignatura(
         @Param("CODIGO") Long id
     );

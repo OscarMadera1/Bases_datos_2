@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TerceroRepository  extends JpaRepository<Tercero, Long>{
     //Mapeo del procedimiento de almacenado
-    @Procedure(procedureName = "HISTORIAS.SP_ING_TERCEROS")
+    @Procedure(procedureName = "SP_ING_TERCEROS")
     void registrarTercero(
         @Param("TIPO_DOC") String tipoDoc,
         @Param("NRO_DOC") String nroDoc,
@@ -24,7 +24,7 @@ public interface TerceroRepository  extends JpaRepository<Tercero, Long>{
     );
 
         //Procedimiento de actualizacion de terceros
-    @Procedure(procedureName = "HISTORIAS.SP_ACT_TERCEROS")
+    @Procedure(procedureName = "SP_ACT_TERCEROS")
     void actualizarTercero(
         @Param("CODIGO") Long codigo,
         @Param("TIPO_DOC") String tipoDoc,
@@ -33,7 +33,7 @@ public interface TerceroRepository  extends JpaRepository<Tercero, Long>{
     );
 
     //Procedimiento de eliminacion de terceros
-    @Procedure(procedureName = "HISTORIAS.SP_ELI_TERCEROS")
+    @Procedure(procedureName = "SP_ELI_TERCEROS")
     void eliminarTercero(
         @Param("CODIGO") Long codigo
     );
