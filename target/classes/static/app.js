@@ -1,226 +1,154 @@
-// para terceros
+// Instancias globales para los modales
+let modalTercero, modalPrograma, modalAsignatura;
 
-document.addEventListener('DOMContentLoaded', () => {
-    const formTercero = document.getElementById('form-tercero');
-
-    // Función para guardar un tercero
-    formTercero.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        // Recolectar datos del formulario
-        const nuevoTercero = {
-            id: document.getElementById('tercId').value,
-            tipoDoc: document.getElementById('tercTipoDoc').value,
-            nroDoc: document.getElementById('tercNroDoc').value,
-            genero: document.getElementById('tercGenero').value,
-            nombres: document.getElementById('tercNombres').value,
-            apellidos: document.getElementById('tercApellidos').value,
-            direccion: document.getElementById('tercDirec').value,
-            correo: document.getElementById('tercCorreo').value,
-            movil: document.getElementById('tercMovil').value,
-            tipo: document.getElementById('tercTipo').value
-        };
-
-        try {
-            // Aquí haces el llamado POST a tu controlador en Spring Boot
-            // Ejemplo: const response = await fetch('/api/terceros', { ... })
-            
-            console.log("Datos listos para enviar a la base de datos Oracle:", nuevoTercero);
-            alert("Tercero registrado correctamente (Simulación)");
-            formTercero.reset();
-            
-            // cargarTerceros(); // Actualizar la tabla después de guardar
-        } catch (error) {
-            console.error('Error al guardar el tercero:', error);
+$(document).ready(function() {
+    // 1. Inicializar DataTables con configuración en español
+    const dtOptions = {
+        language: {
+            processing: "Procesando...",
+            search: "Buscar:",
+            lengthMenu: "Mostrar _MENU_ registros",
+            info: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            infoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+            infoFiltered: "(filtrado de un total de _MAX_ registros)",
+            zeroRecords: "No se encontraron resultados",
+            emptyTable: "Ningún dato disponible en esta tabla",
+            paginate: { first: "Primero", previous: "Anterior", next: "Siguiente", last: "Último" }
         }
-    });
+    };
 
-    // Función para cargar los terceros en la tabla (Ejemplo base)
-    async function cargarTerceros() {
-        try {
-            // const response = await fetch('/api/terceros');
-            // const data = await response.json();
-            
-            // Simulación de datos que llegarían de Oracle
-            const data = [
-                { id: 1, doc: 'CC - 100234', nombres: 'Juan', apellidos: 'Pérez', correo: 'juan@email.com' }
-            ];
+    if ($('#tablaTerceros').length) $('#tablaTerceros').DataTable(dtOptions);
+    if ($('#tablaProgramas').length) $('#tablaProgramas').DataTable(dtOptions);
+    if ($('#tablaAsignaturas').length) $('#tablaAsignaturas').DataTable(dtOptions);
 
-            const tbody = document.querySelector('#tabla-terceros tbody');
-            tbody.innerHTML = '';
+    // 2. Instanciar modales de Bootstrap de forma segura
+    const elTercero = document.getElementById('terceroModal');
+    if (elTercero) modalTercero = new bootstrap.Modal(elTercero);
 
-            data.forEach(tercero => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${tercero.id}</td>
-                    <td>${tercero.doc}</td>
-                    <td>${tercero.nombres}</td>
-                    <td>${tercero.apellidos}</td>
-                    <td>${tercero.correo}</td>
-                    <td>
-                        <button onclick="eliminar(${tercero.id})">Eliminar</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        } catch (error) {
-            console.error('Error al cargar terceros:', error);
-        }
-    }
+    const elPrograma = document.getElementById('programaModal');
+    if (elPrograma) modalPrograma = new bootstrap.Modal(elPrograma);
 
-    // Cargar datos al iniciar la página
-    cargarTerceros();
+    const elAsignatura = document.getElementById('asignaturaModal');
+    if (elAsignatura) modalAsignatura = new bootstrap.Modal(elAsignatura);
+
+    // 3. Activar el Reloj en Tiempo Real
+    actualizarReloj();
+    setInterval(actualizarReloj, 1000);
 });
 
-// para programas
+/* ==================== RELOJ EN TIEMPO REAL ==================== */
+function actualizarReloj() {
+    const clockElement = document.getElementById('liveClock');
+    if (!clockElement) return;
 
-document.addEventListener('DOMContentLoaded', () => {
-    // --- LÓGICA PARA PROGRAMAS ---
-    const formPrograma = document.getElementById('form-programa');
+    const ahora = new Date();
+    const opcionesFecha = { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' };
+    let fechaStr = ahora.toLocaleDateString('es-ES', opcionesFecha);
+    
+    fechaStr = fechaStr.charAt(0).toUpperCase() + fechaStr.slice(1);
+    fechaStr = fechaStr.replace(/ de /g, ' de ').replace(/(\d{4})/, 'del $1');
 
-    // Validamos que estemos en la página de programas
-    if (formPrograma) {
-        
-        // Función para guardar un programa
-        formPrograma.addEventListener('submit', async (e) => {
-            e.preventDefault();
+    let horas = ahora.getHours();
+    const minutos = String(ahora.getMinutes()).padStart(2, '0');
+    const segundos = String(ahora.getSeconds()).padStart(2, '0');
+    const ampm = horas >= 12 ? 'p.m.' : 'a.m.';
+    
+    horas = horas % 12;
+    horas = horas ? horas : 12;
+    const horasStr = String(horas).padStart(2, '0');
 
-            // Recolectar datos del formulario
-            const nuevoPrograma = {
-                id: document.getElementById('progId').value,
-                programa: document.getElementById('progPrograma').value
-            };
-
-            try {
-                // Aquí harás el llamado POST a tu controlador Spring Boot
-                // Ejemplo: await fetch('/api/programas', { method: 'POST', body: JSON.stringify(nuevoPrograma) ... })
-                
-                console.log("Datos listos para enviar a Oracle (PROGRAMAS):", nuevoPrograma);
-                alert("Programa registrado correctamente (Simulación)");
-                formPrograma.reset();
-                
-                // cargarProgramas(); // Actualizar la tabla
-            } catch (error) {
-                console.error('Error al guardar el programa:', error);
-            }
-        });
-
-        // Función para cargar los programas en la tabla
-        async function cargarProgramas() {
-            try {
-                // Simulación de datos que llegarían de tu base de datos Oracle
-                const data = [
-                    { id: 101, programa: 'Ingeniería de Sistemas' },
-                    { id: 102, programa: 'Ingeniería Industrial' },
-                    { id: 103, programa: 'Administración de Empresas' }
-                ];
-
-                const tbody = document.querySelector('#tabla-programas tbody');
-                tbody.innerHTML = '';
-
-                data.forEach(prog => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${prog.id}</td>
-                        <td>${prog.programa}</td>
-                        <td>
-                            <button onclick="eliminarPrograma(${prog.id})">Eliminar</button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (error) {
-                console.error('Error al cargar programas:', error);
-            }
-        }
-
-        // Cargar datos al iniciar la página
-        cargarProgramas();
-    }
-});
-
-// Función global simulada para eliminar (aplica para cualquier script en la página)
-function eliminarPrograma(id) {
-    if(confirm(`¿Estás seguro de eliminar el programa con ID ${id}?`)) {
-        console.log(`Petición DELETE enviada para el ID: ${id}`);
-        // Aquí iría tu fetch con método DELETE
-    }
+    const horaStr = `hora: ${horasStr}:${minutos}:${segundos} ${ampm}`;
+    clockElement.innerText = `${fechaStr}, ${horaStr}`;
 }
 
-// para asignaturas
-document.addEventListener('DOMContentLoaded', () => {
-    // --- LÓGICA PARA ASIGNATURAS ---
-    const formAsignatura = document.getElementById('form-asignatura');
-
-    if (formAsignatura) {
-        
-        // Función para guardar una asignatura
-        formAsignatura.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            // Recolectar datos del formulario
-            const nuevaAsignatura = {
-                id: document.getElementById('asigId').value,
-                asignatura: document.getElementById('asigAsignatura').value,
-                creditos: document.getElementById('asigCreditos').value,
-                codigo: document.getElementById('asigCodigo').value
-            };
-
-            try {
-                // Petición POST a Spring Boot
-                // Ejemplo: await fetch('/api/asignaturas', { method: 'POST', body: JSON.stringify(nuevaAsignatura) ... })
-                
-                console.log("Datos listos para enviar a Oracle (ASIGNATURAS):", nuevaAsignatura);
-                alert("Asignatura registrada correctamente (Simulación)");
-                formAsignatura.reset();
-                
-                // cargarAsignaturas(); // Actualizar la tabla
-            } catch (error) {
-                console.error('Error al guardar la asignatura:', error);
-            }
-        });
-
-        // Función para cargar las asignaturas en la tabla
-        async function cargarAsignaturas() {
-            try {
-                // Simulación de datos que llegarían de tu BD Oracle
-                const data = [
-                    { id: 1, asignatura: 'Base de Datos II', creditos: 4, codigo: 'BD2001' },
-                    { id: 2, asignatura: 'Ingeniería de Software', creditos: 3, codigo: 'ISW100' },
-                    { id: 3, asignatura: 'Cálculo Diferencial', creditos: 4, codigo: 'CAL001' }
-                ];
-
-                const tbody = document.querySelector('#tabla-asignaturas tbody');
-                tbody.innerHTML = '';
-
-                data.forEach(asig => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${asig.id}</td>
-                        <td>${asig.asignatura}</td>
-                        <td>${asig.creditos}</td>
-                        <td>${asig.codigo}</td>
-                        <td>
-                            <button onclick="eliminarAsignatura(${asig.id})">Eliminar</button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (error) {
-                console.error('Error al cargar asignaturas:', error);
-            }
-        }
-
-        // Cargar datos iniciales
-        cargarAsignaturas();
-    }
-});
-
-// Función global simulada para eliminar
-function eliminarAsignatura(id) {
-    if(confirm(`¿Estás seguro de eliminar la asignatura con ID ${id}?`)) {
-        console.log(`Petición DELETE enviada para el ID: ${id}`);
-        // Aquí iría tu fetch DELETE apuntando a tu API
-    }
+/* ==================== GESTIÓN DE TERCEROS ==================== */
+function abrirModalRegistrar() {
+    const form = document.getElementById('terceroForm');
+    if (form) { form.reset(); form.action = '/terceros/guardar'; }
+    document.getElementById('tercId').value = '';
+    document.getElementById('modalTitle').innerText = 'Registrar Nuevo Tercero';
+    const btn = document.getElementById('btnSubmit');
+    if (btn) { btn.innerText = 'Guardar Tercero'; btn.className = 'btn btn-primary'; }
+    if (modalTercero) modalTercero.show();
 }
 
+function editarTercero(id, tipoDoc, nroDoc, genero, nombres, apellidos, direccion, correo, movil, tipo) {
+    document.getElementById('tercId').value = id;
+    document.getElementById('tipoDoc').value = tipoDoc;
+    document.getElementById('nroDoc').value = nroDoc;
+    document.getElementById('genero').value = genero;
+    document.getElementById('nombres').value = nombres;
+    document.getElementById('apellidos').value = apellidos;
+    document.getElementById('direccion').value = direccion;
+    document.getElementById('correo').value = correo;
+    document.getElementById('movil').value = movil;
+    document.getElementById('tipo').value = tipo;
+
+    const form = document.getElementById('terceroForm');
+    if (form) form.action = '/terceros/actualizar';
+    document.getElementById('modalTitle').innerText = 'Actualizar Tercero (ID: ' + id + ')';
+    const btn = document.getElementById('btnSubmit');
+    if (btn) { btn.innerText = 'Actualizar Cambios'; btn.className = 'btn btn-warning text-dark fw-bold'; }
+    if (modalTercero) modalTercero.show();
+}
+
+/* ==================== GESTIÓN DE PROGRAMAS ==================== */
+function abrirModalRegistrarPrograma() {
+    const form = document.getElementById('programaForm');
+    if (form) { form.reset(); form.action = '/programas/guardar'; }
+    document.getElementById('progId').value = '';
+    document.getElementById('modalTitleProg').innerText = 'Registrar Nuevo Programa';
+    const btn = document.getElementById('btnSubmitProg');
+    if (btn) { btn.innerText = 'Guardar Programa'; btn.className = 'btn btn-primary'; }
+    if (modalPrograma) modalPrograma.show();
+}
+
+function editarPrograma(id, nombre) {
+    document.getElementById('progId').value = id;
+    document.getElementById('progNombre').value = nombre;
+    const form = document.getElementById('programaForm');
+    if (form) form.action = '/programas/actualizar';
+    document.getElementById('modalTitleProg').innerText = 'Actualizar Programa (ID: ' + id + ')';
+    const btn = document.getElementById('btnSubmitProg');
+    if (btn) { btn.innerText = 'Actualizar Cambios'; btn.className = 'btn btn-warning text-dark fw-bold'; }
+    if (modalPrograma) modalPrograma.show();
+}
+
+/* ==================== GESTIÓN DE ASIGNATURAS ==================== */
+function abrirModalRegistrarAsignatura() {
+    const form = document.getElementById('asignaturaForm');
+    if (form) { 
+        form.reset(); 
+        form.action = '/asignaturas/guardar'; 
+    }
+    
+    // Limpiar el ID para indicar que es un registro nuevo
+    const idField = document.getElementById('asigId');
+    if (idField) idField.value = ''; 
+    
+    document.getElementById('modalTitleAsig').innerText = 'Registrar Nueva Asignatura';
+    document.getElementById('btnSubmitAsig').innerText = 'Guardar Asignatura';
+    
+    if (modalAsignatura) modalAsignatura.show();
+}
+
+// Escucha segura mediante atributos data-* para evitar fallos de sintaxis en Thymeleaf
+$(document).on('click', '.btn-editar-asig', function() {
+    const id = $(this).data('id');
+    const asignatura = $(this).data('asignatura');
+    const creditos = $(this).data('creditos');
+    const codigo = $(this).data('codigo');
+
+    document.getElementById('asigId').value = id;
+    document.getElementById('asigNombre').value = asignatura;
+    document.getElementById('asigCreditos').value = creditos;
+    document.getElementById('asigCodigo').value = codigo;
+
+    const form = document.getElementById('asignaturaForm');
+    if (form) form.action = '/asignaturas/actualizar';
+
+    document.getElementById('modalTitleAsig').innerText = 'Actualizar Asignatura (ID: ' + id + ')';
+    document.getElementById('btnSubmitAsig').innerText = 'Actualizar Cambios';
+
+    if (modalAsignatura) modalAsignatura.show();
+});

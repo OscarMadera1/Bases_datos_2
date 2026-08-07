@@ -18,7 +18,7 @@ public class ProgramaController {
     @GetMapping
     public String listarProgramas(Model model){
         model.addAttribute("programas", programaService.listarTodos());
-        model.addAttribute("programas", new Programa());
+        model.addAttribute("programa", new Programa());  // Debe llamarse "programa" para hacer match con el modal
         return "programas";
     }
 
