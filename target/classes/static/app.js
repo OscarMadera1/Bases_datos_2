@@ -30,7 +30,36 @@ $(document).ready(function() {
 
     const elAsignatura = document.getElementById('asignaturaModal');
     if (elAsignatura) modalAsignatura = new bootstrap.Modal(elAsignatura);
+
+    // 3. Activar el Reloj en Tiempo Real
+    actualizarReloj();
+    setInterval(actualizarReloj, 1000);
 });
+
+/* ==================== RELOJ EN TIEMPO REAL ==================== */
+function actualizarReloj() {
+    const clockElement = document.getElementById('liveClock');
+    if (!clockElement) return; // Si no existe en la página actual, no hace nada
+
+    const ahora = new Date();
+    const opcionesFecha = { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' };
+    let fechaStr = ahora.toLocaleDateString('es-ES', opcionesFecha);
+    
+    fechaStr = fechaStr.charAt(0).toUpperCase() + fechaStr.slice(1);
+    fechaStr = fechaStr.replace(/ de /g, ' de ').replace(/(\d{4})/, 'del $1');
+
+    let horas = ahora.getHours();
+    const minutos = String(ahora.getMinutes()).padStart(2, '0');
+    const segundos = String(ahora.getSeconds()).padStart(2, '0');
+    const ampm = horas >= 12 ? 'p.m.' : 'a.m.';
+    
+    horas = horas % 12;
+    horas = horas ? horas : 12;
+    const horasStr = String(horas).padStart(2, '0');
+
+    const horaStr = `hora: ${horasStr}:${minutos}:${segundos} ${ampm}`;
+    clockElement.innerText = `${fechaStr}, ${horaStr}`;
+}
 
 /* ==================== GESTIÓN DE TERCEROS ==================== */
 function abrirModalRegistrar() {
@@ -96,20 +125,15 @@ function abrirModalRegistrarAsignatura() {
     if (modalAsignatura) modalAsignatura.show();
 }
 
-function editarAsignatura(id, asignatura, creditos, codigo) {
-    document.getElementById('asigId').value = id;
-    document.getElementById('asigNombre').value = asignatura;
+function editarAsignatura(codigo, nombre, creditos, codigoMat) {
+    document.getElementById('asigId').value = codigo;
+    document.getElementById('asigNombre').value = nombre;
     document.getElementById('asigCreditos').value = creditos;
-    document.getElementById('asigCodigo').value = codigo;
-
+    document.getElementById('asigCodigo').value = codigoMat;
     const form = document.getElementById('asignaturaForm');
     if (form) form.action = '/asignaturas/actualizar';
-    document.getElementById('modalTitleAsig').innerText = 'Actualizar Asignatura (ID: ' + id + ')';
-    
+    document.getElementById('modalTitleAsig').innerText = 'Actualizar Asignatura (ID: ' + codigo + ')';
     const btn = document.getElementById('btnSubmitAsig');
-    if (btn) {
-        btn.innerText = 'Actualizar Cambios';
-        btn.className = 'btn btn-warning text-dark fw-bold';
-    }
+    if (btn) { btn.innerText = 'Actualizar Cambios'; btn.className = 'btn btn-warning text-dark fw-bold'; }
     if (modalAsignatura) modalAsignatura.show();
 }

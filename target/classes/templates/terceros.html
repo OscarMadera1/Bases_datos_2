@@ -9,10 +9,22 @@
     <!-- DataTables Bootstrap 5 CSS -->
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/style.css">
+    <style>
+        .reloj-institucional {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.75);
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container py-5">
-        <!-- Cabecera Institucional -->
+    <div class="container py-4">
+        <!-- Fecha y Hora en tiempo real -->
+        <div class="d-flex justify-content-end mb-2">
+            <div id="liveClock" class="reloj-institucional text-end">Cargando fecha y hora...</div>
+        </div>
+
         <div class="d-flex justify-content-between align-items-center mb-4 text-white">
             <div>
                 <span class="badge bg-primary px-3 py-1 mb-2 text-uppercase">Uniremington</span>
@@ -24,7 +36,6 @@
             </button>
         </div>
 
-        <!-- Tabla Estilo Glass / DataTables -->
         <div class="card card-glass border-0 shadow">
             <div class="card-body">
                 <h2 class="h5 mb-3 text-dark fw-bold">Lista de Terceros Registrados</h2>
