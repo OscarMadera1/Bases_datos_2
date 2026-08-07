@@ -10,24 +10,24 @@
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/style.css">
 </head>
-<body class="bg-light">
+<body>
     <div class="container py-5">
-        <!-- Cabecera -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <!-- Cabecera Institucional -->
+        <div class="d-flex justify-content-between align-items-center mb-4 text-white">
             <div>
-                <h1 class="h3 fw-bold text-dark">Gestión de Programas</h1>
-                <a href="/" class="text-decoration-none text-muted">&larr; Volver al Menú Principal</a>
+                <span class="badge bg-primary px-3 py-1 mb-2 text-uppercase">Uniremington</span>
+                <h1 class="h3 fw-bold">Gestión de Programas</h1>
+                <a href="/" class="text-decoration-none text-white-50">&larr; Volver al Menú Principal</a>
             </div>
-            <!-- Botón para abrir el Modal de Registro -->
-            <button type="button" class="btn btn-primary" onclick="abrirModalRegistrarPrograma()">
+            <button type="button" class="btn btn-primary fw-bold px-4 py-2 shadow" onclick="abrirModalRegistrarPrograma()">
                 + Registrar Nuevo Programa
             </button>
         </div>
 
-        <!-- Tabla Estilo Bootstrap / DataTables -->
-        <div class="card shadow-sm border-0">
+        <!-- Tabla Estilo Glass / DataTables -->
+        <div class="card card-glass border-0 shadow">
             <div class="card-body">
-                <h2 class="h5 mb-3 text-secondary">Lista de Programas Registrados</h2>
+                <h2 class="h5 mb-3 text-dark fw-bold">Lista de Programas Registrados</h2>
                 <div class="table-responsive">
                     <table id="tablaProgramas" class="table table-striped table-hover align-middle">
                         <thead class="table-dark">
@@ -60,19 +60,17 @@
         </div>
     </div>
 
-    <!-- Modal Bootstrap Centrado para Registrar / Editar Programa -->
+    <!-- Modal Bootstrap Centrado -->
     <div class="modal fade" id="programaModal" tabindex="-1" aria-labelledby="modalTitleProg" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content shadow">
+            <div class="modal-content shadow border-0">
                 <form id="programaForm" th:action="@{/programas/guardar}" th:object="${programaObj}" method="post">
                     <div class="modal-header bg-dark text-white">
                         <h5 class="modal-title" id="modalTitleProg">Registrar Nuevo Programa</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <!-- Campo oculto para el ID en modo actualización -->
+                    <div class="modal-body bg-light text-dark">
                         <input type="hidden" th:field="*{id}" id="progId">
-                        
                         <div class="row g-3">
                             <div class="col-md-12">
                                 <label class="form-label fw-bold">Nombre del Programa</label>
@@ -80,7 +78,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer bg-light">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn btn-primary" id="btnSubmitProg">Guardar Programa</button>
                     </div>
@@ -89,13 +87,11 @@
         </div>
     </div>
 
-    <!-- Scripts externos necesarios -->
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-    
-    <!-- Archivo JS centralizado -->
     <script src="/app.js"></script>
 </body>
 </html>
