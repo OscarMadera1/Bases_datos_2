@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/style.css">
 </head>
+
 <body>
     <div class="container py-4">
         <div class="d-flex justify-content-end mb-2">
@@ -20,7 +22,8 @@
                 <h1 class="h3 fw-bold">Gestión de Asignaturas</h1>
                 <a href="/" class="text-decoration-none text-white-50">&larr; Volver al Menú</a>
             </div>
-            <button type="button" class="btn btn-primary fw-bold px-4 py-2 shadow" onclick="abrirModalRegistrarAsignatura()">
+            <button type="button" class="btn btn-primary fw-bold px-4 py-2 shadow"
+                onclick="abrirModalRegistrarAsignatura()">
                 + Registrar Nueva Asignatura
             </button>
         </div>
@@ -42,21 +45,19 @@
                         <tbody>
                             <tr th:each="a : ${asignaturas}">
                                 <td th:text="${a.id}"></td>
-                                <td th:text="${a.asignatura}"></td>
+                                <td th:text="${a.nombre}"></td> <!-- CAMBIO AQUÍ -->
                                 <td th:text="${a.creditos}"></td>
                                 <td th:text="${a.codigo}"></td>
                                 <td class="text-center">
-                                    <!-- Botón seguro con atributos data-* (Evita errores de Thymeleaf) -->
-                                    <button type="button" class="btn btn-warning btn-sm fw-bold btn-editar-asig" 
-                                            th:data-id="${a.id}"
-                                            th:data-asignatura="${a.asignatura}"
-                                            th:data-creditos="${a.creditos}"
-                                            th:data-codigo="${a.codigo}">
+                                    <button type="button" class="btn btn-warning btn-sm fw-bold me-1"
+                                        th:data-id="${a.id}" th:data-nombre="${a.nombre}"
+                                        th:data-creditos="${a.creditos}" th:data-codigo="${a.codigo}"
+                                        onclick="editarAsignatura(this)">
                                         Editar
                                     </button>
-                                    <a th:href="@{/asignaturas/eliminar/{id}(id=${a.id})}" 
-                                       class="btn btn-danger btn-sm fw-bold ms-1" 
-                                       onclick="return confirm('¿Está seguro de eliminar esta asignatura?');">
+                                    <a th:href="@{/asignaturas/eliminar/{id}(id=${a.id})}"
+                                        class="btn btn-danger btn-sm fw-bold ms-1"
+                                        onclick="return confirm('¿Está seguro de eliminar esta asignatura?');">
                                         Eliminar
                                     </a>
                                 </td>
@@ -73,7 +74,7 @@
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content shadow border-0">
                 <!-- Sin th:action fijo para que el JS lo maneje dinámicamente -->
-                <form id="asignaturaForm" th:object="${asignatura}" method="post">
+                <form id="asignaturaForm" th:object="${asigModel}" method="post">
                     <div class="modal-header bg-dark text-white">
                         <h5 class="modal-title" id="modalTitleAsig">Registrar</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -81,15 +82,17 @@
                     <div class="modal-body bg-light text-dark">
                         <!-- ID oculto -->
                         <input type="hidden" th:field="*{id}" id="asigId">
-                        
+
                         <div class="row g-3">
                             <div class="col-md-12">
                                 <label class="form-label fw-bold">Nombre</label>
-                                <input type="text" th:field="*{asignatura}" id="asigNombre" class="form-control" required>
+                                <input type="text" th:field="*{nombre}" id="asigNombre" class="form-control" required>
+                                <!-- CAMBIO AQUÍ -->
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Créditos</label>
-                                <input type="number" th:field="*{creditos}" id="asigCreditos" class="form-control" required>
+                                <input type="number" th:field="*{creditos}" id="asigCreditos" class="form-control"
+                                    required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Código</label>
@@ -112,4 +115,5 @@
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script src="/app.js"></script>
 </body>
+
 </html>

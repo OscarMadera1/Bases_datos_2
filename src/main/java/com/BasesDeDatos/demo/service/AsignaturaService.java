@@ -18,22 +18,22 @@ public class AsignaturaService {
         return asignaturaRepository.findAll();
     }
 
-    //Guardar asignatura
+ // Guardar asignatura
     @Transactional
     public void guardarAsignatura(Asignatura asignatura){
         asignaturaRepository.registrarAsignatura(
-            asignatura.getAsignatura(),
+            asignatura.getNombre(), // Cambiado de getAsignatura() a getNombre()
             asignatura.getCreditos(),
             asignatura.getCodigo()
         );
     }
 
-    //Actualizar asignatura
+    // Actualizar asignatura
     @Transactional
     public void actualizarAsignatura(Asignatura asignatura){
         asignaturaRepository.actualizarAsignatura(
             asignatura.getId(),
-            asignatura.getAsignatura(),
+            asignatura.getNombre(), // Cambiado de getAsignatura() a getNombre()
             asignatura.getCreditos(),
             asignatura.getCodigo()
         );

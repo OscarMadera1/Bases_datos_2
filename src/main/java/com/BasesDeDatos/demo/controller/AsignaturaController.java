@@ -14,34 +14,31 @@ public class AsignaturaController {
     @Autowired
     private AsignaturaService asignaturaService;
 
-    //Listar Asignaturas
     @GetMapping
     public String listarAsignaturas(Model model){
         model.addAttribute("asignaturas", asignaturaService.listarTodas());
-        model.addAttribute("asignatura", new Asignatura()); 
+        // CAMBIO AQUÍ: Le damos el apodo "asigModel"
+        model.addAttribute("asigModel", new Asignatura()); 
         return "asignaturas";
     }
 
-    //Guardar asignatura
     @PostMapping("/guardar")
-    public String guardarAsignatura(@ModelAttribute("asignatura") Asignatura asignatura){
+    // CAMBIO AQUÍ: Usamos "asigModel"
+    public String guardarAsignatura(@ModelAttribute("asigModel") Asignatura asignatura){
         asignaturaService.guardarAsignatura(asignatura);
         return "redirect:/asignaturas";
     }
 
-    //Actualizar asignatura
     @PostMapping("/actualizar")
-    public String actualizarAsignatura(@ModelAttribute("asignatura") Asignatura asignatura){
+    // CAMBIO AQUÍ: Usamos "asigModel"
+    public String actualizarAsignatura(@ModelAttribute("asigModel") Asignatura asignatura){
         asignaturaService.actualizarAsignatura(asignatura);
         return "redirect:/asignaturas";
     }
 
-    //Eliminar asignatura
     @GetMapping("/eliminar/{id}")
-    public String eliminarAsignatura(@PathVariable("id")Long id){
+    public String eliminarAsignatura(@PathVariable("id") Long id){
         asignaturaService.eliminarAsignatura(id);
         return "redirect:/asignaturas";
     }
-
-    
 }

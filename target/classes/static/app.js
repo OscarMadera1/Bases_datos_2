@@ -138,6 +138,7 @@ function editarPrograma(btn) {
     if (modalPrograma) modalPrograma.show();
 }
 
+
 /* ==================== GESTIÓN DE ASIGNATURAS ==================== */
 function abrirModalRegistrarAsignatura() {
     const form = document.getElementById('asignaturaForm');
@@ -146,25 +147,31 @@ function abrirModalRegistrarAsignatura() {
         form.action = '/asignaturas/guardar'; 
     }
     
-    // Limpiar el ID para indicar que es un registro nuevo
+    // Limpiar el ID explícitamente para indicar que es un registro nuevo (Oracle usará la secuencia)
     const idField = document.getElementById('asigId');
     if (idField) idField.value = ''; 
     
     document.getElementById('modalTitleAsig').innerText = 'Registrar Nueva Asignatura';
-    document.getElementById('btnSubmitAsig').innerText = 'Guardar Asignatura';
+    
+    const btnSubmit = document.getElementById('btnSubmitAsig');
+    if (btnSubmit) {
+        btnSubmit.innerText = 'Guardar Asignatura';
+        btnSubmit.className = 'btn btn-primary';
+    }
     
     if (modalAsignatura) modalAsignatura.show();
 }
 
-// Escucha segura mediante atributos data-* para evitar fallos de sintaxis en Thymeleaf
-$(document).on('click', '.btn-editar-asig', function() {
-    const id = $(this).data('id');
-    const asignatura = $(this).data('asignatura');
-    const creditos = $(this).data('creditos');
-    const codigo = $(this).data('codigo');
+
+
+function editarAsignatura(btn) {
+    const id = btn.getAttribute('data-id');
+    const nombre = btn.getAttribute('data-nombre'); // CAMBIO AQUÍ
+    const creditos = btn.getAttribute('data-creditos');
+    const codigo = btn.getAttribute('data-codigo');
 
     document.getElementById('asigId').value = id;
-    document.getElementById('asigNombre').value = asignatura;
+    document.getElementById('asigNombre').value = nombre; // Usa la variable nombre
     document.getElementById('asigCreditos').value = creditos;
     document.getElementById('asigCodigo').value = codigo;
 
@@ -172,7 +179,11 @@ $(document).on('click', '.btn-editar-asig', function() {
     if (form) form.action = '/asignaturas/actualizar';
 
     document.getElementById('modalTitleAsig').innerText = 'Actualizar Asignatura (ID: ' + id + ')';
-    document.getElementById('btnSubmitAsig').innerText = 'Actualizar Cambios';
+    const btnSubmit = document.getElementById('btnSubmitAsig');
+    if (btnSubmit) {
+        btnSubmit.innerText = 'Actualizar Cambios';
+        btnSubmit.className = 'btn btn-warning text-dark fw-bold';
+    }
 
     if (modalAsignatura) modalAsignatura.show();
-});
+}
