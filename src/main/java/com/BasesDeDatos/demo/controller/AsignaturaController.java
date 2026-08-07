@@ -18,7 +18,7 @@ public class AsignaturaController {
     @GetMapping
     public String listarAsignaturas(Model model){
         model.addAttribute("asignaturas", asignaturaService.listarTodas());
-        model.addAttribute("asignaturaObj", new Asignatura()); // Cambiado de "asignatura" a "asignaturaObj"
+        model.addAttribute("asignatura", new Asignatura()); 
         return "asignaturas";
     }
 

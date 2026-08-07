@@ -4,24 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Asignaturas</title>
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- DataTables Bootstrap 5 CSS -->
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
     <div class="container py-4">
-        <!-- Fecha y Hora en tiempo real -->
         <div class="d-flex justify-content-end mb-2">
-            <div id="liveClock" class="reloj-institucional text-end">Cargando fecha y hora...</div>
+            <div id="liveClock" class="reloj-institucional text-end">Cargando...</div>
         </div>
 
         <div class="d-flex justify-content-between align-items-center mb-4 text-white">
             <div>
                 <span class="badge bg-primary px-3 py-1 mb-2 text-uppercase">Uniremington</span>
                 <h1 class="h3 fw-bold">Gestión de Asignaturas</h1>
-                <a href="/" class="text-decoration-none text-white-50">&larr; Volver al Menú Principal</a>
+                <a href="/" class="text-decoration-none text-white-50">&larr; Volver al Menú</a>
             </div>
             <button type="button" class="btn btn-primary fw-bold px-4 py-2 shadow" onclick="abrirModalRegistrarAsignatura()">
                 + Registrar Nueva Asignatura
@@ -30,13 +27,13 @@
 
         <div class="card card-glass border-0 shadow">
             <div class="card-body">
-                <h2 class="h5 mb-3 text-dark fw-bold">Lista de Asignaturas Registradas</h2>
+                <h2 class="h5 mb-3 text-dark fw-bold">Lista de Asignaturas</h2>
                 <div class="table-responsive">
                     <table id="tablaAsignaturas" class="table table-striped table-hover align-middle">
                         <thead class="table-dark">
                             <tr>
                                 <th>ID</th>
-                                <th>Nombre Asignatura</th>
+                                <th>Nombre</th>
                                 <th>Créditos</th>
                                 <th>Código</th>
                                 <th class="text-center">Acciones</th>
@@ -49,12 +46,16 @@
                                 <td th:text="${a.creditos}"></td>
                                 <td th:text="${a.codigo}"></td>
                                 <td class="text-center">
-                                    <button type="button" class="btn btn-warning btn-sm fw-bold me-1" 
-                                            th:onclick="editarAsignatura([[${a.id}]], [[${a.asignatura}]], [[${a.creditos}]], [[${a.codigo}]])">
+                                    <!-- Botón seguro con atributos data-* (Evita errores de Thymeleaf) -->
+                                    <button type="button" class="btn btn-warning btn-sm fw-bold btn-editar-asig" 
+                                            th:data-id="${a.id}"
+                                            th:data-asignatura="${a.asignatura}"
+                                            th:data-creditos="${a.creditos}"
+                                            th:data-codigo="${a.codigo}">
                                         Editar
                                     </button>
                                     <a th:href="@{/asignaturas/eliminar/{id}(id=${a.id})}" 
-                                       class="btn btn-danger btn-sm fw-bold" 
+                                       class="btn btn-danger btn-sm fw-bold ms-1" 
                                        onclick="return confirm('¿Está seguro de eliminar esta asignatura?');">
                                         Eliminar
                                     </a>
@@ -67,42 +68,44 @@
         </div>
     </div>
 
-    <!-- Modal Bootstrap Centrado -->
-    <div class="modal fade" id="asignaturaModal" tabindex="-1" aria-labelledby="modalTitleAsig" aria-hidden="true">
+    <!-- Modal -->
+    <div class="modal fade" id="asignaturaModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content shadow border-0">
-                <form id="asignaturaForm" th:action="@{/asignaturas/guardar}" th:object="${asignatura}" method="post">
+                <!-- Sin th:action fijo para que el JS lo maneje dinámicamente -->
+                <form id="asignaturaForm" th:object="${asignatura}" method="post">
                     <div class="modal-header bg-dark text-white">
-                        <h5 class="modal-title" id="modalTitleAsig">Registrar Nueva Asignatura</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h5 class="modal-title" id="modalTitleAsig">Registrar</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body bg-light text-dark">
+                        <!-- ID oculto -->
                         <input type="hidden" th:field="*{id}" id="asigId">
+                        
                         <div class="row g-3">
                             <div class="col-md-12">
-                                <label class="form-label fw-bold">Nombre de la Asignatura</label>
-                                <input type="text" th:field="*{asignatura}" id="asigNombre" class="form-control" placeholder="Nombre" maxlength="50" required>
+                                <label class="form-label fw-bold">Nombre</label>
+                                <input type="text" th:field="*{asignatura}" id="asigNombre" class="form-control" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Créditos</label>
-                                <input type="number" th:field="*{creditos}" id="asigCreditos" class="form-control" placeholder="Ej. 3" required>
+                                <input type="number" th:field="*{creditos}" id="asigCreditos" class="form-control" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Código</label>
-                                <input type="text" th:field="*{codigo}" id="asigCodigo" class="form-control" placeholder="Ej. SIS101" maxlength="6" required>
+                                <input type="text" th:field="*{codigo}" id="asigCodigo" class="form-control" required>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer bg-light">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary" id="btnSubmitAsig">Guardar Asignatura</button>
+                        <button type="submit" class="btn btn-primary" id="btnSubmitAsig">Guardar</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>

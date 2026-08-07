@@ -21,7 +21,7 @@ $(document).ready(function() {
     if ($('#tablaProgramas').length) $('#tablaProgramas').DataTable(dtOptions);
     if ($('#tablaAsignaturas').length) $('#tablaAsignaturas').DataTable(dtOptions);
 
-    // 2. Instanciar modales de Bootstrap
+    // 2. Instanciar modales de Bootstrap de forma segura
     const elTercero = document.getElementById('terceroModal');
     if (elTercero) modalTercero = new bootstrap.Modal(elTercero);
 
@@ -39,7 +39,7 @@ $(document).ready(function() {
 /* ==================== RELOJ EN TIEMPO REAL ==================== */
 function actualizarReloj() {
     const clockElement = document.getElementById('liveClock');
-    if (!clockElement) return; // Si no existe en la página actual, no hace nada
+    if (!clockElement) return;
 
     const ahora = new Date();
     const opcionesFecha = { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' };
@@ -117,23 +117,38 @@ function editarPrograma(id, nombre) {
 /* ==================== GESTIÓN DE ASIGNATURAS ==================== */
 function abrirModalRegistrarAsignatura() {
     const form = document.getElementById('asignaturaForm');
-    if (form) { form.reset(); form.action = '/asignaturas/guardar'; }
-    document.getElementById('asigCodigo').value = '';
+    if (form) { 
+        form.reset(); 
+        form.action = '/asignaturas/guardar'; 
+    }
+    
+    // Limpiar el ID para indicar que es un registro nuevo
+    const idField = document.getElementById('asigId');
+    if (idField) idField.value = ''; 
+    
     document.getElementById('modalTitleAsig').innerText = 'Registrar Nueva Asignatura';
-    const btn = document.getElementById('btnSubmitAsig');
-    if (btn) { btn.innerText = 'Guardar Asignatura'; btn.className = 'btn btn-primary'; }
+    document.getElementById('btnSubmitAsig').innerText = 'Guardar Asignatura';
+    
     if (modalAsignatura) modalAsignatura.show();
 }
 
-function editarAsignatura(codigo, nombre, creditos, codigoMat) {
-    document.getElementById('asigId').value = codigo;
-    document.getElementById('asigNombre').value = nombre;
+// Escucha segura mediante atributos data-* para evitar fallos de sintaxis en Thymeleaf
+$(document).on('click', '.btn-editar-asig', function() {
+    const id = $(this).data('id');
+    const asignatura = $(this).data('asignatura');
+    const creditos = $(this).data('creditos');
+    const codigo = $(this).data('codigo');
+
+    document.getElementById('asigId').value = id;
+    document.getElementById('asigNombre').value = asignatura;
     document.getElementById('asigCreditos').value = creditos;
-    document.getElementById('asigCodigo').value = codigoMat;
+    document.getElementById('asigCodigo').value = codigo;
+
     const form = document.getElementById('asignaturaForm');
     if (form) form.action = '/asignaturas/actualizar';
-    document.getElementById('modalTitleAsig').innerText = 'Actualizar Asignatura (ID: ' + codigo + ')';
-    const btn = document.getElementById('btnSubmitAsig');
-    if (btn) { btn.innerText = 'Actualizar Cambios'; btn.className = 'btn btn-warning text-dark fw-bold'; }
+
+    document.getElementById('modalTitleAsig').innerText = 'Actualizar Asignatura (ID: ' + id + ')';
+    document.getElementById('btnSubmitAsig').innerText = 'Actualizar Cambios';
+
     if (modalAsignatura) modalAsignatura.show();
-}
+});
