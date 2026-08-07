@@ -18,7 +18,7 @@ public class ProgramaController {
     @GetMapping
     public String listarProgramas(Model model){
         model.addAttribute("programas", programaService.listarTodos());
-        model.addAttribute("programaObj", new Programa());  // Nombre diferente para el formulario del modal
+        model.addAttribute("programa", new Programa());  // Debe llamarse "programa" para hacer match con el modal
         return "programas";
     }
 

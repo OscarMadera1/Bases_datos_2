@@ -9,14 +9,6 @@
     <!-- DataTables Bootstrap 5 CSS -->
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/style.css">
-    <style>
-        .reloj-institucional {
-            font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.75);
-            font-weight: 400;
-            letter-spacing: 0.3px;
-        }
-    </style>
 </head>
 <body>
     <div class="container py-4">
@@ -75,7 +67,7 @@
     <div class="modal fade" id="programaModal" tabindex="-1" aria-labelledby="modalTitleProg" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content shadow border-0">
-                <form id="programaForm" th:action="@{/programas/guardar}" th:object="${programaObj}" method="post">
+                <form id="programaForm" th:action="@{/programas/guardar}" th:object="${programa}" method="post">
                     <div class="modal-header bg-dark text-white">
                         <h5 class="modal-title" id="modalTitleProg">Registrar Nuevo Programa</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
