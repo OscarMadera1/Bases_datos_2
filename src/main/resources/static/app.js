@@ -103,7 +103,10 @@ function abrirModalRegistrarPrograma() {
     if (modalPrograma) modalPrograma.show();
 }
 
-function editarPrograma(id, nombre) {
+/*function editarPrograma(btn) {
+    const id = btn.getAttribute('data-id');
+    const nombre = btn.getAttribute('data-programa');
+
     document.getElementById('progId').value = id;
     document.getElementById('progNombre').value = nombre;
     const form = document.getElementById('programaForm');
@@ -111,6 +114,27 @@ function editarPrograma(id, nombre) {
     document.getElementById('modalTitleProg').innerText = 'Actualizar Programa (ID: ' + id + ')';
     const btn = document.getElementById('btnSubmitProg');
     if (btn) { btn.innerText = 'Actualizar Cambios'; btn.className = 'btn btn-warning text-dark fw-bold'; }
+    if (modalPrograma) modalPrograma.show();
+}*/
+function editarPrograma(btn) {
+    const id = btn.getAttribute('data-id');
+    const nombre = btn.getAttribute('data-programa');
+
+    document.getElementById('progId').value = id;
+    document.getElementById('progNombre').value = nombre;
+
+    const form = document.getElementById('programaForm');
+    if (form) form.action = '/programas/actualizar';
+
+    document.getElementById('modalTitleProg').innerText = 'Actualizar Programa (ID: ' + id + ')';
+
+    // Cambiado de 'btn' a 'btnSubmit' para no sobreescribir el parámetro 'btn'
+    const btnSubmit = document.getElementById('btnSubmitProg');
+    if (btnSubmit) {
+        btnSubmit.innerText = 'Actualizar Cambios';
+        btnSubmit.className = 'btn btn-warning text-dark fw-bold';
+    }
+
     if (modalPrograma) modalPrograma.show();
 }
 

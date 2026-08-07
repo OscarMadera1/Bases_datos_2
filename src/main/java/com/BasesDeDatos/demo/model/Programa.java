@@ -16,6 +16,6 @@ public class Programa {
     private Long id;
 
     @Column(name = "PROG_PROGRAMA", length = 50, nullable = false)
-    private String programa;
+    private String nombre;
     
 }

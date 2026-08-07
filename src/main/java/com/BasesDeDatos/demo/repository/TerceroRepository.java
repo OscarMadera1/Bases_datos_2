@@ -23,7 +23,7 @@ public interface TerceroRepository  extends JpaRepository<Tercero, Long>{
         @Param("TIPO") String tipo
     );
 
-        //Procedimiento de actualizacion de terceros
+        //Procedimiento de actualización de terceros
     @Procedure(procedureName = "SP_ACT_TERCEROS")
     void actualizarTercero(
         @Param("CODIGO") Long codigo,
@@ -32,7 +32,7 @@ public interface TerceroRepository  extends JpaRepository<Tercero, Long>{
         @Param("GENERO") String genero
     );
 
-    //Procedimiento de eliminacion de terceros
+    //Procedimiento de eliminación de terceros
     @Procedure(procedureName = "SP_ELI_TERCEROS")
     void eliminarTercero(
         @Param("CODIGO") Long codigo

@@ -18,13 +18,13 @@ public interface ProgramaRepository extends JpaRepository<Programa, Long>{
     //Procedimiento actualizar programa
     @Procedure(procedureName = "SP_ACT_PROGRAMAS")
     void actualizarPrograma(
-        @Param("CODIGO") Long codigo,
+        @Param("PROG_ID") Long codigo,
         @Param("P_PROGRAMA") String programa
     );
 
-    //Procedimieto eliminar programa
+    //Procedimiento eliminar programa
     @Procedure(procedureName = "SP_ELI_PROGRAMAS")
     void eliminarPrograma(
-        @Param("CODIGO") Long codigo
+        @Param("PROG_ID") Long codigo
     );
 }

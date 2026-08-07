@@ -22,13 +22,13 @@ public class ProgramaService {
     //Guardar programa
     @Transactional
     public void guardarPrograma(Programa programa){
-        programaRepository.registrarPrograma(programa.getPrograma());
+        programaRepository.registrarPrograma(programa.getNombre());
     }
     
     //Actualizar programa
     @Transactional
     public void actualizarPrograma(Programa programa){
-        programaRepository.actualizarPrograma(programa.getId(), programa.getPrograma());
+        programaRepository.actualizarPrograma(programa.getId(), programa.getNombre());
     }
 
     //Eliminar programa

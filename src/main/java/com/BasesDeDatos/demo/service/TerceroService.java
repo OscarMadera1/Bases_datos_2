@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 public class TerceroService {
-    //Crear la instancia del repositorio automaticamente
+    //Crear la instancia del repositorio automáticamente
     @Autowired
     private TerceroRepository terceroRepository;
 

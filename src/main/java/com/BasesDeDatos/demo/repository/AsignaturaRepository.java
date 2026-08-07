@@ -22,7 +22,7 @@ public interface AsignaturaRepository extends JpaRepository<Asignatura, Long> {
     void actualizarAsignatura(
         @Param("CODIGO") Long id,
         @Param("P_ASIGNATURA") String asignatura,
-        @Param("P_CREDITOS") Integer crditos,
+        @Param("P_CREDITOS") Integer creditos,
         @Param("P_CODIGO") String codigo
     );
 
