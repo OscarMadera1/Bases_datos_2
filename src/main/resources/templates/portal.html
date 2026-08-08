@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio - Sistema de Gestión Académica</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        body {
+            background-color: #f4f6f9;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .login-info-bg {
+            background: #0d6efd;
+            /* Azul sólido como en la imagen */
+            color: white;
+        }
+
+        /* Estilos exactos para los botones del menú según la imagen */
+        .module-btn {
+            background-color: #ffffff;
+            /* Fondo blanco */
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            border-radius: 8px;
+        }
+
+        .module-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        /* Colores de bordes y títulos */
+        .module-btn-datos {
+            border-color: #0d6efd !important;
+        }
+
+        .module-btn-datos h5 {
+            color: #0d6efd !important;
+        }
+
+        .module-btn-procesos {
+            border-color: #198754 !important;
+        }
+
+        .module-btn-procesos h5 {
+            color: #198754 !important;
+        }
+
+        .module-btn-informes {
+            border-color: #ffc107 !important;
+        }
+
+        .module-btn-informes h5 {
+            color: #ffc107 !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-9">
+                <div class="row login-card bg-white">
+
+                    <!-- Lado Izquierdo: Exactamente como en la imagen -->
+                    <div class="col-md-6 login-info-bg p-5 d-none d-md-flex flex-column justify-content-center">
+                        <span class="badge bg-white text-primary mb-3 align-self-start fw-bold px-3 py-2 text-uppercase"
+                            style="border-radius: 8px;">
+                            Uniremington
+                        </span>
+                        <h1 class="fw-bold mb-4" style="font-size: 2.8rem; line-height: 1.2;">Sistema de
+                            Gestión<br>Académica</h1>
+                        <p class="mb-0" style="color: #e0eaff; font-size: 1.1rem;">
+                            Plataforma centralizada para la administración de la<br>información institucional.
+                        </p>
+                    </div>
+
+                    <!-- Lado Derecho: Botones con bordes y colores exactos -->
+                    <div class="col-md-6 p-5 d-flex flex-column justify-content-center bg-white">
+                        <div class="text-center mb-4">
+                            <h2 class="fw-bold text-dark mb-2">Bienvenido</h2>
+                            <p class="text-muted" style="font-size: 1.1rem;">Selecciona un módulo para comenzar</p>
+                        </div>
+
+                        <div class="d-grid gap-3">
+                            <!-- Botón Datos CORREGIDO -->
+                            <a th:href="@{/index}"
+                                class="btn module-btn module-btn-datos p-3 text-start shadow-sm d-flex align-items-center text-decoration-none">
+                                <div class="fs-1 me-3">📊</div>
+                                <div>
+                                    <h5 class="fw-bold mb-1">Módulo de Datos</h5>
+                                    <small class="text-muted">Parametrización del sistema</small>
+                                </div>
+                            </a>
+
+                            <!-- Botón Procesos -->
+                            <a href="#"
+                                class="btn module-btn module-btn-procesos p-3 text-start shadow-sm d-flex align-items-center text-decoration-none">
+                                <div class="fs-1 me-3">⚙️</div>
+                                <div>
+                                    <h5 class="fw-bold mb-1">Módulo de Procesos</h5>
+                                    <small class="text-muted">Transacciones académicas</small>
+                                </div>
+                            </a>
+
+                            <!-- Botón Informes -->
+                            <a href="#"
+                                class="btn module-btn module-btn-informes p-3 text-start shadow-sm d-flex align-items-center text-decoration-none">
+                                <div class="fs-1 me-3">📈</div>
+                                <div>
+                                    <h5 class="fw-bold mb-1">Módulo de Informes</h5>
+                                    <small class="text-muted">Consultas y estadísticas</small>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

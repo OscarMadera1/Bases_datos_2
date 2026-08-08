@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Sistema de Gestión Académica</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        body {
+            background-color: #f4f6f9;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .auth-card {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            max-width: 450px;
+            width: 100%;
+        }
+        .auth-header {
+            background: #0d6efd;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container d-flex justify-content-center">
+        <div class="card auth-card border-0 bg-white">
+            <div class="auth-header">
+                <span class="badge bg-white text-primary mb-2 fw-bold px-3 py-1 text-uppercase" style="border-radius: 6px;">Uniremington</span>
+                <h3 class="fw-bold mb-0">Acceso al Sistema</h3>
+                <p class="small text-white-50 mt-1 mb-0">Gestión Académica</p>
+            </div>
+            
+            <div class="card-body p-4 p-md-5">
+                <!-- Formulario que envía los datos al método PostMapping /auth/procesar -->
+                <form th:action="@{/auth/procesar}" method="post"></form>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-dark">Usuario</label>
+                        <input type="text" name="username" class="form-control form-control-lg bg-light" placeholder="Ingresa tu usuario" required>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-dark">Contraseña</label>
+                        <input type="password" name="password" class="form-control form-control-lg bg-light" placeholder="••••••••" required>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm">
+                            Ingresar
+                        </button>
+                        <a href="/" class="btn btn-outline-secondary btn-sm mt-2">
+                          Recuperar contraseña
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
