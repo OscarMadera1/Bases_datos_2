@@ -53,4 +53,9 @@ public class TerceroService {
             terceroRepository.eliminarTercero(id);
         }
 
+
+        // Método para autenticar al usuario en el login
+    public Tercero autenticarUsuario(String nroDoc, String clave) {
+        return terceroRepository.findByNroDocAndClave(nroDoc, clave);
+    }
 }

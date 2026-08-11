@@ -37,4 +37,7 @@ public interface TerceroRepository  extends JpaRepository<Tercero, Long>{
     void eliminarTercero(
         @Param("CODIGO") Long codigo
     );
+    // Busca un tercero que coincida con el número de documento y la clave
+    Tercero findByNroDocAndClave(String nroDoc, String clave);
+
 }
