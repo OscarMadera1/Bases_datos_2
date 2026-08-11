@@ -16,11 +16,13 @@ public class LoginController {
     @Autowired
     private TerceroService terceroService;
 
+    // 1. Mostrar la vista del Login
     @GetMapping("/")
     public String mostrarLogin() {
         return "auth_login"; 
     }
 
+    // 2. Procesar las credenciales
     @PostMapping("/auth/procesar")
     public String procesarLogin(@RequestParam("username") String username, 
                                 @RequestParam("password") String password,
@@ -30,37 +32,35 @@ public class LoginController {
         // Buscamos al usuario en la base de datos
         Tercero usuarioLogueado = terceroService.autenticarUsuario(username, password);
 
+        // AQUÍ ESTÁ LA LÓGICA QUE FALTABA EN TU CÓDIGO
         if (usuarioLogueado != null) {
-            // Si existe, guardamos sus datos en la sesión para usarlos en toda la app
+            // Si el usuario existe, se guarda en la sesión y entra al portal
             session.setAttribute("usuario", usuarioLogueado);
             return "redirect:/portal"; 
         } else {
-            // Si no existe o la clave está mal, lo devolvemos al login con un mensaje de error
+            // Si no existe, se devuelve al inicio con error
             redirectAttributes.addFlashAttribute("error", "Documento o contraseña incorrectos.");
             return "redirect:/"; 
         }
     }
 
+    // 3. Vista del Portal (Ya no necesita validación manual gracias al Interceptor)
     @GetMapping("/portal")
-    public String mostrarPortal(HttpSession session) {
-        // Protección de ruta: Si no hay usuario en sesión, lo devolvemos al login
-        if(session.getAttribute("usuario") == null) {
-            return "redirect:/";
-        }
+    public String mostrarPortal() {
         return "portal"; 
     }
 
-    // Ruta para cerrar sesión
+    // 4. Vista del menú interno (Módulo de Datos)
+    @GetMapping("/index")
+    public String mostrarMenuPrincipal() {
+        return "index"; 
+    }
+
+    // 5. Ruta para cerrar sesión
     @GetMapping("/logout")
     public String cerrarSesion(HttpSession session) {
         session.removeAttribute("usuario");
         session.invalidate(); // Destruye la sesión por seguridad
         return "redirect:/";
-    }
-
-    // Ruta del menú interno del Módulo de Datos (donde están tus tablas)
-    @GetMapping("/index")
-    public String mostrarMenuPrincipal() {
-        return "index"; 
     }
 }
