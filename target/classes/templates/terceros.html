@@ -85,7 +85,12 @@
                         <div class="row g-3">
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">Tipo Doc</label>
-                                <input type="text" th:field="*{tipoDoc}" id="tipoDoc" class="form-control" placeholder="ej. CC" maxlength="2" required>
+                                <select th:field="*{tipoDoc}" id="tipoDoc" class="form-control" required>
+                                    <option value="">Seleccione tipo de documento</option>
+                                    <option value="CC">Cédula de Ciudadanía</option>
+                                    <option value="TI">Tarjeta de Identidad</option>
+                                    <option value="CE">Cédula de extranjería</option>
+                                </select>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">Nro Documento</label>
@@ -93,7 +98,11 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-bold">Género</label>
-                                <input type="text" th:field="*{genero}" id="genero" class="form-control" placeholder="M/F" maxlength="1" required>
+                                <select th:field="*{genero}" id="genero" class="form-control" required>
+                                    <option value="">Seleccione género</option>
+                                    <option value="M">Masculino</option>
+                                    <option value="F">Femenino</option>
+                                </select>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Nombres</label>
@@ -117,7 +126,11 @@
                             </div>
                             <div class="col-md-2">
                                 <label class="form-label fw-bold">Tipo</label>
-                                <input type="text" th:field="*{tipo}" id="tipo" class="form-control" maxlength="1" required>
+                                <select th:field="*{tipo}" id="tipo" class="form-control" required>
+                                    <option value="">Seleccione tipo de rol</option>
+                                    <option value="0">Estudiante</option>
+                                    <option value="1">Profesor</option>
+                                </select>
                             </div>
                         </div>
                     </div>
