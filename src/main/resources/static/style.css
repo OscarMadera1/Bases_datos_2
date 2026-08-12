@@ -1,7 +1,7 @@
 /* Fondo institucional global con imagen de Uniremington y capa oscura */
 body {
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-                url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
     background-size: cover;
     min-height: 100vh;
     color: #fff;
@@ -21,12 +21,160 @@ body {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border-radius: 1rem;
 }
+
 .card-menu:hover {
     transform: translateY(-8px);
     box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.4) !important;
 }
 
 /* Estilo global para el reloj institucional en tiempo real */
+.reloj-institucional {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.75);
+    font-weight: 400;
+    letter-spacing: 0.3px;
+}
+
+
+
+/* Fondo centrado exclusivo para las pantallas de inicio */
+.body-login {
+    background-color: #f4f6f9;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 1. Estilos para auth_login.html (Usuario y Contraseña) */
+.auth-card {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    max-width: 450px;
+    width: 100%;
+}
+
+.auth-header {
+    background: #0d6efd;
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+/* 2. Estilos para portal.html (Botones de Módulos) */
+.login-card {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.login-info-bg {
+    background: #0d6efd;
+    color: white;
+}
+
+.module-btn {
+    background-color: #ffffff;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    border-radius: 8px;
+}
+
+.module-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Colores de bordes y títulos de los botones del portal */
+.module-btn-datos {
+    border-color: #0d6efd !important;
+}
+
+.module-btn-datos h5 {
+    color: #0d6efd !important;
+}
+
+.module-btn-procesos {
+    border-color: #198754 !important;
+}
+
+.module-btn-procesos h5 {
+    color: #198754 !important;
+}
+
+.module-btn-informes {
+    border-color: #ffc107 !important;
+}
+
+.module-btn-informes h5 {
+    color: #ffc107 !important;
+}
+
+
+
+
+body {
+    background-color: #f4f6f9;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-card {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.login-info-bg {
+    background: #0d6efd;
+    /* Azul sólido como en la imagen */
+    color: white;
+}
+
+/* Estilos exactos para los botones del menú según la imagen */
+.module-btn {
+    background-color: #ffffff;
+    /* Fondo blanco */
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    border-radius: 8px;
+}
+
+.module-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Colores de bordes y títulos */
+.module-btn-datos {
+    border-color: #0d6efd !important;
+}
+
+.module-btn-datos h5 {
+    color: #0d6efd !important;
+}
+
+.module-btn-procesos {
+    border-color: #198754 !important;
+}
+
+.module-btn-procesos h5 {
+    color: #198754 !important;
+}
+
+.module-btn-informes {
+    border-color: #ffc107 !important;
+}
+
+.module-btn-informes h5 {
+    color: #ffc107 !important;
+}
+
+
+
 .reloj-institucional {
     font-size: 0.95rem;
     color: rgba(255, 255, 255, 0.75);
