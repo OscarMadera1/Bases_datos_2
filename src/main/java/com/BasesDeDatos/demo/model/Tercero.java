@@ -44,4 +44,7 @@ public class Tercero {
 
     @Column(name = "TERC_TIPO", length = 1)
     private String tipo;
+
+    @Column(name = "TERC_CLAVE", length = 50)
+    private String clave;
 }
