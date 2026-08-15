@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Matrícula de Estudiante</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 40px;
+    }
+
+    .contenedor {
+      max-width: 700px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .campo {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 15px;
+      box-sizing: border-box;
+    }
+
+    select:disabled {
+      background-color: #e9ecef;
+      cursor: not-allowed;
+    }
+
+    .botones {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    button {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 5px;
+      background-color: #198754;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #157347;
+    }
+
+    button:disabled {
+      background-color: #6c757d;
+      cursor: not-allowed;
+    }
+
+    #mensaje {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+  <h1>Matrícula de Estudiante</h1>
+
+  <form th:action="@{/matriculas/guardar}" method="post">
+
+    <div class="campo">
+
+      <label for="terceroId">
+        Estudiante:
+      </label>
+
+      <select
+              id="terceroId"
+              name="terceroId"
+              required>
+
+        <option value="">
+          Seleccione un estudiante
+        </option>
+
+        <option
+                th:each="tercero : ${terceros}"
+                th:value="${tercero.id}"
+                th:text="${tercero.nombres + ' ' + tercero.apellidos}">
+        </option>
+
+      </select>
+
+    </div>
+
+    <div class="campo">
+
+      <label for="programaId">
+        Programa:
+      </label>
+
+      <select
+              id="programaId"
+              required>
+
+        <option value="">
+          Seleccione un programa
+        </option>
+
+        <option
+                th:each="programa : ${programas}"
+                th:value="${programa.id}"
+                th:text="${programa.nombre}">
+        </option>
+
+      </select>
+
+    </div>
+
+    <div class="campo">
+
+      <label for="pensumId">
+        Pensum:
+      </label>
+
+      <select
+              id="pensumId"
+              name="pensumId"
+              required
+              disabled>
+
+        <option value="">
+          Seleccione primero un programa
+        </option>
+
+      </select>
+
+    </div>
+
+    <div id="mensaje"></div>
+
+    <div class="botones">
+
+      <button
+              type="submit"
+              id="btnMatricular">
+
+        Matricular estudiante
+
+      </button>
+
+    </div>
+
+  </form>
+
+</div>
+
+
+<script>
+
+  const programaSelect = document.getElementById("programaId");
+
+  const pensumSelect = document.getElementById("pensumId");
+
+  const mensaje = document.getElementById("mensaje");
+
+  const btnMatricular = document.getElementById("btnMatricular");
+
+  programaSelect.addEventListener("change", function () {
+
+    const programaId = this.value;
+
+    pensumSelect.innerHTML =
+            '<option value="">Cargando pensums...</option>';
+
+    pensumSelect.disabled = true;
+
+    mensaje.textContent = "";
+
+    if (!programaId) {
+
+      pensumSelect.innerHTML =
+              '<option value="">Seleccione primero un programa</option>';
+
+      return;
+    }
+
+    fetch(`/matriculas/pensums/${programaId}`)
+
+            .then(response => {
+
+              if (!response.ok) {
+
+                throw new Error(
+                        "No fue posible consultar los pensums."
+                );
+
+              }
+
+              return response.json();
+
+            })
+
+            .then(pensums => {
+
+              pensumSelect.innerHTML =
+                      '<option value="">Seleccione un pensum</option>';
+
+
+              if (pensums.length === 0) {
+
+                pensumSelect.innerHTML =
+                        '<option value="">No hay pensums disponibles</option>';
+
+                mensaje.textContent =
+                        "El programa seleccionado no tiene pensums registrados.";
+
+                pensumSelect.disabled = true;
+
+                return;
+              }
+
+
+              pensums.forEach(pensum => {
+
+                const option =
+                        document.createElement("option");
+
+
+                option.value = pensum.id;
+
+                option.textContent =
+                        `${pensum.id} - Periodo ${pensum.periodo}`;
+
+
+                pensumSelect.appendChild(option);
+
+              });
+
+              pensumSelect.disabled = false;
+
+              mensaje.textContent = "";
+
+            })
+
+            .catch(error => {
+
+              console.error(
+                      "Error:",
+                      error
+              );
+
+
+              pensumSelect.innerHTML =
+                      '<option value="">Error cargando pensums</option>';
+
+              pensumSelect.disabled = true;
+
+
+              mensaje.textContent =
+                      "Ocurrió un error al cargar los pensums.";
+
+            });
+
+  });
+
+  document.querySelector("form").addEventListener("submit", function (event) {
+
+    const terceroId =
+            document.getElementById("terceroId").value;
+
+    const programaId =
+            document.getElementById("programaId").value;
+
+    const pensumId =
+            document.getElementById("pensumId").value;
+
+    if (!terceroId) {
+
+      event.preventDefault();
+
+      alert("Debe seleccionar un estudiante.");
+
+      return;
+    }
+
+    if (!programaId) {
+
+      event.preventDefault();
+
+      alert("Debe seleccionar un programa.");
+
+      return;
+    }
+
+    if (!pensumId) {
+
+      event.preventDefault();
+
+      alert("Debe seleccionar un pensum.");
+
+      return;
+    }
+
+  });
+
+</script>
+
+</body>
+
+</html>

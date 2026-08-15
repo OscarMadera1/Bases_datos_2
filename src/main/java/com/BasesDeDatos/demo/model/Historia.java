@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import java.math.BigDecimal;
 import java.io.Serializable;
 
 //Mapero tabla de Historias
@@ -27,7 +28,7 @@ public class Historia {
     private Long cursoId;
 
     @Column(name = "HIST_NOTA", precision = 2, scale = 1)
-    private Double nota;
+    private BigDecimal nota;
 
     //Clave primaria compuesta
     @Data

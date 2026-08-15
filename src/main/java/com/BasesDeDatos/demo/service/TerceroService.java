@@ -32,7 +32,8 @@ public class TerceroService {
             tercero.getDireccion(),
             tercero.getCorreo(),
             tercero.getMovil(),
-            tercero.getTipo()
+            tercero.getTipo(),
+            tercero.getClave()
         );
     }
 

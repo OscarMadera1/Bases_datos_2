@@ -12,6 +12,6 @@ public interface HistoriaRepository extends JpaRepository<Historia, Historia.His
     List<Historia> findByTerceroId(Long terceroId);
 
     //Buscar por estudiante y periodo
-    List<Historia> findByTerceroIdandPeriodo(Long terceroId, String periodo);
+    List<Historia> findByTerceroIdAndPeriodo(Long terceroId, String periodo);
     
 }

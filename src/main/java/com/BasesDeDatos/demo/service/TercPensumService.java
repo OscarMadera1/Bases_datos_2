@@ -11,7 +11,22 @@ public class TercPensumService {
     private TercPensumRepositori tercPensumRepositori;
 
     @Transactional
-    public void registrarMatricula (Long terceroId, Long pensumId){
-        tercPensumRepositori.matricularEstudiantePesum(terceroId, pensumId);
+    public boolean registrarMatricula(
+            Long terceroId,
+            Long pensumId) {
+
+        if (tercPensumRepositori.existsByTerceroIdAndPensumId(
+                terceroId,
+                pensumId)) {
+
+            return false;
+        }
+
+        tercPensumRepositori.matricularEstudiantePesum(
+                terceroId,
+                pensumId
+        );
+
+        return true;
     }
 }
