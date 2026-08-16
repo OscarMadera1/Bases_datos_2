@@ -27,7 +27,7 @@ public class Historia {
     @Column(name = "CURS_ID")
     private Long cursoId;
 
-    @Column(name = "HIST_NOTA", precision = 2, scale = 1)
+    @Column(name = "HIST_NOTA")
     private BigDecimal nota;
 
     //Clave primaria compuesta

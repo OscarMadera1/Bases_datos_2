@@ -20,8 +20,7 @@ public interface TerceroRepository  extends JpaRepository<Tercero, Long>{
         @Param("DIREC") String direc,
         @Param("CORREO") String correo,
         @Param("MOVIL") String movil,
-        @Param("TIPO") String tipo,
-        @Param("CLAVE") String clave
+        @Param("TIPO") String tipo
     );
 
         //Procedimiento de actualización de terceros
