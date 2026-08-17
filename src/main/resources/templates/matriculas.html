@@ -5,197 +5,758 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Matrícula de Estudiante</title>
+  <title>Matrícula de Estudiantes</title>
 
   <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f6f8;
       margin: 0;
-      padding: 40px;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f1f4f8;
+      color: #212529;
     }
 
-    .contenedor {
-      max-width: 700px;
+    /* =========================
+       CONTENEDOR PRINCIPAL
+       ========================= */
+
+    .pagina {
+      width: 100%;
+      max-width: 1200px;
       margin: 0 auto;
-      background-color: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 35px 25px 50px;
     }
 
-    h1 {
-      margin-top: 0;
-      margin-bottom: 30px;
-      text-align: center;
+
+    /* =========================
+       ENCABEZADO
+       ========================= */
+
+    .encabezado {
+      margin-bottom: 25px;
+    }
+
+    .volver {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+
+      color: #198754;
+      text-decoration: none;
+
+      font-size: 14px;
+      font-weight: 600;
+
+      margin-bottom: 18px;
+    }
+
+    .volver:hover {
+      text-decoration: underline;
+    }
+
+    .titulo {
+      margin: 0;
+      font-size: 30px;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    .subtitulo {
+      margin-top: 8px;
+      margin-bottom: 0;
+
+      color: #6b7280;
+      font-size: 15px;
+    }
+
+
+    /* =========================
+       TARJETA DEL FORMULARIO
+       ========================= */
+
+    .card {
+      background: #ffffff;
+
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+
+      padding: 30px;
+      margin-bottom: 25px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 25px;
+      padding-bottom: 18px;
+
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .card-title {
+      margin: 0;
+
+      font-size: 20px;
+      font-weight: 700;
+
+      color: #1f2937;
+    }
+
+    .card-description {
+      margin: 5px 0 0;
+
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+
+    /* =========================
+       FORMULARIO
+       ========================= */
+
+    .form-grid {
+      display: grid;
+
+      grid-template-columns: repeat(2, 1fr);
+
+      gap: 22px;
     }
 
     .campo {
-      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .campo-completo {
+      grid-column: 1 / -1;
     }
 
     label {
-      display: block;
       margin-bottom: 8px;
-      font-weight: bold;
+
+      font-size: 14px;
+      font-weight: 700;
+
+      color: #374151;
+    }
+
+    .requerido {
+      color: #dc3545;
     }
 
     select {
       width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 15px;
-      box-sizing: border-box;
+
+      height: 45px;
+
+      padding: 0 13px;
+
+      border: 1px solid #cbd5e1;
+      border-radius: 7px;
+
+      background-color: #ffffff;
+
+      color: #374151;
+
+      font-size: 14px;
+
+      outline: none;
+
+      transition:
+              border-color 0.2s ease,
+              box-shadow 0.2s ease;
+    }
+
+    select:focus {
+      border-color: #198754;
+
+      box-shadow:
+              0 0 0 3px rgba(25, 135, 84, 0.12);
     }
 
     select:disabled {
-      background-color: #e9ecef;
+      background-color: #f1f5f9;
+      color: #94a3b8;
       cursor: not-allowed;
     }
 
-    .botones {
-      margin-top: 30px;
-      text-align: center;
-    }
 
-    button {
-      padding: 12px 25px;
-      border: none;
-      border-radius: 5px;
-      background-color: #198754;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #157347;
-    }
-
-    button:disabled {
-      background-color: #6c757d;
-      cursor: not-allowed;
-    }
+    /* =========================
+       MENSAJE
+       ========================= */
 
     #mensaje {
-      margin-top: 15px;
+      margin-top: 18px;
+
+      color: #dc3545;
+
+      font-size: 14px;
       text-align: center;
+    }
+
+
+    /* =========================
+       BOTONES
+       ========================= */
+
+    .acciones {
+      display: flex;
+      justify-content: flex-end;
+
+      margin-top: 28px;
+      padding-top: 22px;
+
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .btn-matricular {
+      height: 45px;
+
+      padding: 0 24px;
+
+      border: none;
+      border-radius: 7px;
+
+      background-color: #198754;
+      color: white;
+
+      font-size: 14px;
+      font-weight: 700;
+
+      cursor: pointer;
+
+      transition:
+              background-color 0.2s ease,
+              transform 0.1s ease,
+              box-shadow 0.2s ease;
+    }
+
+    .btn-matricular:hover {
+      background-color: #157347;
+
+      box-shadow:
+              0 3px 8px rgba(25, 135, 84, 0.25);
+    }
+
+    .btn-matricular:active {
+      transform: translateY(1px);
+    }
+
+    .btn-matricular:disabled {
+      background-color: #94a3b8;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+
+    /* =========================
+       TABLA DE MATRÍCULA
+       ========================= */
+
+    .tabla-card {
+      background: #ffffff;
+
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+
+      overflow: hidden;
+    }
+
+    .tabla-header {
+      padding: 22px 25px;
+
+      border-bottom: 1px solid #e5e7eb;
+
+      background: #ffffff;
+    }
+
+    .tabla-titulo {
+      margin: 0;
+
+      font-size: 20px;
+      font-weight: 700;
+
+      color: #1f2937;
+    }
+
+    .tabla-subtitulo {
+      margin: 6px 0 0;
+
+      color: #6b7280;
+
       font-size: 14px;
     }
+
+    .tabla-contenedor {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+
+      border-collapse: collapse;
+
+      min-width: 700px;
+    }
+
+    thead {
+      background-color: #198754;
+    }
+
+    th {
+      padding: 14px 18px;
+
+      color: white;
+
+      font-size: 13px;
+      font-weight: 700;
+
+      text-align: left;
+
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 15px 18px;
+
+      border-bottom: 1px solid #e5e7eb;
+
+      color: #374151;
+
+      font-size: 14px;
+
+      vertical-align: middle;
+    }
+
+    tbody tr {
+      transition: background-color 0.15s ease;
+    }
+
+    tbody tr:hover {
+      background-color: #f8fafc;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+
+    /* =========================
+       DATOS DE LA TABLA
+       ========================= */
+
+    .periodo {
+      font-weight: 700;
+      color: #198754;
+    }
+
+    .docente {
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .asignatura {
+      color: #1f2937;
+    }
+
+
+    /* =========================
+       ESTADO DE LA TABLA
+       ========================= */
+
+    .cantidad {
+      display: inline-flex;
+
+      align-items: center;
+      justify-content: center;
+
+      min-width: 28px;
+      height: 28px;
+
+      padding: 0 8px;
+
+      margin-left: 8px;
+
+      border-radius: 15px;
+
+      background-color: #e8f5ee;
+      color: #198754;
+
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+
+    /* =========================
+       RESPONSIVE
+       ========================= */
+
+    @media (max-width: 768px) {
+
+      .pagina {
+        padding: 20px 15px 40px;
+      }
+
+      .titulo {
+        font-size: 25px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .campo-completo {
+        grid-column: auto;
+      }
+
+      .acciones {
+        justify-content: stretch;
+      }
+
+      .btn-matricular {
+        width: 100%;
+      }
+
+      .tabla-header {
+        padding: 18px;
+      }
+
+      th,
+      td {
+        padding: 12px 14px;
+      }
+    }
+
   </style>
 </head>
 
+
 <body>
 
-<div class="contenedor">
-  <a href="/portal" class="text-decoration-none text-white-50">&larr; Volver al portal</a>
+<div class="pagina">
 
-  <h1>Matrícula de Estudiante</h1>
 
-  <form th:action="@{/matriculas/guardar}" method="post">
+  <!-- =========================
+       ENCABEZADO
+       ========================= -->
 
-    <div class="campo">
+  <div class="encabezado">
 
-      <label for="terceroId">
-        Estudiante:
-      </label>
+    <a href="/portal" class="volver">
+      ← Volver al portal
+    </a>
 
-      <select
-              id="terceroId"
-              name="terceroId"
-              required>
+    <h1 class="titulo">
+      Matrícula de Estudiantes
+    </h1>
 
-        <option value="">
-          Seleccione un estudiante
-        </option>
+    <p class="subtitulo">
+      Seleccione el estudiante, programa y pensum para registrar la matrícula.
+    </p>
 
-        <option
-                th:each="tercero : ${terceros}"
-                th:value="${tercero.id}"
-                th:text="${tercero.nombres + ' ' + tercero.apellidos}">
-        </option>
+  </div>
 
-      </select>
 
-    </div>
+  <!-- =========================
+       FORMULARIO
+       ========================= -->
 
-    <div class="campo">
+  <div class="card">
 
-      <label for="programaId">
-        Programa:
-      </label>
+    <div class="card-header">
 
-      <select
-              id="programaId"
-              required>
+      <div>
 
-        <option value="">
-          Seleccione un programa
-        </option>
+        <h2 class="card-title">
+          Registrar matrícula
+        </h2>
 
-        <option
-                th:each="programa : ${programas}"
-                th:value="${programa.id}"
-                th:text="${programa.nombre}">
-        </option>
+        <p class="card-description">
+          Complete la información requerida para realizar la matrícula.
+        </p>
 
-      </select>
+      </div>
 
     </div>
 
-    <div class="campo">
 
-      <label for="pensumId">
-        Pensum:
-      </label>
+    <form
+            th:action="@{/matriculas/guardar}"
+            method="post">
 
-      <select
-              id="pensumId"
-              name="pensumId"
-              required
-              disabled>
 
-        <option value="">
-          Seleccione primero un programa
-        </option>
+      <div class="form-grid">
 
-      </select>
+
+        <!-- ESTUDIANTE -->
+
+        <div class="campo campo-completo">
+
+          <label for="terceroId">
+
+            Estudiante
+
+            <span class="requerido">
+                            *
+                        </span>
+
+          </label>
+
+          <select
+                  id="terceroId"
+                  name="terceroId"
+                  required>
+
+            <option value="">
+              Seleccione un estudiante
+            </option>
+
+            <option
+                    th:each="tercero : ${terceros}"
+                    th:value="${tercero.id}"
+                    th:text="${tercero.nombres + ' ' + tercero.apellidos}">
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- PROGRAMA -->
+
+        <div class="campo">
+
+          <label for="programaId">
+
+            Programa
+
+            <span class="requerido">
+                            *
+                        </span>
+
+          </label>
+
+          <select
+                  id="programaId"
+                  required>
+
+            <option value="">
+              Seleccione un programa
+            </option>
+
+            <option
+                    th:each="programa : ${programas}"
+                    th:value="${programa.id}"
+                    th:text="${programa.nombre}">
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- PENSUM -->
+
+        <div class="campo">
+
+          <label for="pensumId">
+
+            Pensum
+
+            <span class="requerido">
+                            *
+                        </span>
+
+          </label>
+
+          <select
+                  id="pensumId"
+                  name="pensumId"
+                  required
+                  disabled>
+
+            <option value="">
+              Seleccione primero un programa
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <!-- MENSAJE -->
+
+      <div id="mensaje"></div>
+
+
+      <!-- ACCIONES -->
+
+      <div class="acciones">
+
+        <button
+                type="submit"
+                id="btnMatricular"
+                class="btn-matricular">
+
+          Matricular estudiante
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+
+  <!-- =========================
+       ASIGNATURAS MATRICULADAS
+       ========================= -->
+
+  <div
+          class="tabla-card"
+          th:if="${matriculas != null and !matriculas.isEmpty()}">
+
+
+    <div class="tabla-header">
+
+      <h2 class="tabla-titulo">
+
+        Asignaturas matriculadas
+
+        <span
+                class="cantidad"
+                th:text="${#lists.size(matriculas)}">
+                    0
+                </span>
+
+      </h2>
+
+      <p class="tabla-subtitulo">
+        Asignaturas asociadas al estudiante seleccionado.
+      </p>
 
     </div>
 
-    <div id="mensaje"></div>
 
-    <div class="botones">
+    <div class="tabla-contenedor">
 
-      <button
-              type="submit"
-              id="btnMatricular">
+      <table>
 
-        Matricular estudiante
+        <thead>
 
-      </button>
+        <tr>
+
+          <th>
+            Periodo académico
+          </th>
+
+          <th>
+            Docente
+          </th>
+
+          <th>
+            Asignatura
+          </th>
+
+        </tr>
+
+        </thead>
+
+
+        <tbody>
+
+        <tr
+                th:each="matricula : ${matriculas}">
+
+          <td>
+
+                        <span
+                                class="periodo"
+                                th:text="${matricula.histPeriodo}">
+                            202701
+                        </span>
+
+          </td>
+
+
+          <td>
+
+                        <span
+                                class="docente"
+                                th:text="${matricula.docenteNombres + ' ' + matricula.docenteApellidos}">
+                            Docente
+                        </span>
+
+          </td>
+
+
+          <td>
+
+                        <span
+                                class="asignatura"
+                                th:text="${matricula.asigAsignatura}">
+                            Asignatura
+                        </span>
+
+          </td>
+
+        </tr>
+
+        </tbody>
+
+      </table>
 
     </div>
 
-  </form>
+  </div>
+
 
 </div>
 
 
 <script>
 
-  const programaSelect = document.getElementById("programaId");
+  const programaSelect =
+          document.getElementById("programaId");
 
-  const pensumSelect = document.getElementById("pensumId");
+  const pensumSelect =
+          document.getElementById("pensumId");
 
-  const mensaje = document.getElementById("mensaje");
+  const mensaje =
+          document.getElementById("mensaje");
 
-  const btnMatricular = document.getElementById("btnMatricular");
+  const btnMatricular =
+          document.getElementById("btnMatricular");
+
+
+  /*
+   * ==========================================
+   * CARGAR PENSUMS SEGÚN EL PROGRAMA
+   * ==========================================
+   */
 
   programaSelect.addEventListener("change", function () {
 
     const programaId = this.value;
+
 
     pensumSelect.innerHTML =
             '<option value="">Cargando pensums...</option>';
@@ -204,6 +765,7 @@
 
     mensaje.textContent = "";
 
+
     if (!programaId) {
 
       pensumSelect.innerHTML =
@@ -211,6 +773,7 @@
 
       return;
     }
+
 
     fetch(`/matriculas/pensums/${programaId}`)
 
@@ -227,6 +790,7 @@
               return response.json();
 
             })
+
 
             .then(pensums => {
 
@@ -254,7 +818,9 @@
                         document.createElement("option");
 
 
-                option.value = pensum.id;
+                option.value =
+                        pensum.id;
+
 
                 option.textContent =
                         `${pensum.id} - Periodo ${pensum.periodo}`;
@@ -264,11 +830,13 @@
 
               });
 
+
               pensumSelect.disabled = false;
 
               mensaje.textContent = "";
 
             })
+
 
             .catch(error => {
 
@@ -291,47 +859,66 @@
 
   });
 
-  document.querySelector("form").addEventListener("submit", function (event) {
 
-    const terceroId =
-            document.getElementById("terceroId").value;
+  /*
+   * ==========================================
+   * VALIDACIÓN DEL FORMULARIO
+   * ==========================================
+   */
 
-    const programaId =
-            document.getElementById("programaId").value;
+  document
+          .querySelector("form")
+          .addEventListener("submit", function (event) {
 
-    const pensumId =
-            document.getElementById("pensumId").value;
+            const terceroId =
+                    document.getElementById("terceroId").value;
 
-    if (!terceroId) {
+            const programaId =
+                    document.getElementById("programaId").value;
 
-      event.preventDefault();
+            const pensumId =
+                    document.getElementById("pensumId").value;
 
-      alert("Debe seleccionar un estudiante.");
 
-      return;
-    }
+            if (!terceroId) {
 
-    if (!programaId) {
+              event.preventDefault();
 
-      event.preventDefault();
+              alert(
+                      "Debe seleccionar un estudiante."
+              );
 
-      alert("Debe seleccionar un programa.");
+              return;
+            }
 
-      return;
-    }
 
-    if (!pensumId) {
+            if (!programaId) {
 
-      event.preventDefault();
+              event.preventDefault();
 
-      alert("Debe seleccionar un pensum.");
+              alert(
+                      "Debe seleccionar un programa."
+              );
 
-      return;
-    }
+              return;
+            }
 
-  });
+
+            if (!pensumId) {
+
+              event.preventDefault();
+
+              alert(
+                      "Debe seleccionar un pensum."
+              );
+
+              return;
+            }
+
+          });
 
 </script>
+
 
 </body>
 

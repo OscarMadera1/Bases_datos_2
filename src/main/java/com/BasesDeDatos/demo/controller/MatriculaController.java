@@ -1,10 +1,9 @@
 package com.BasesDeDatos.demo.controller;
 
+import com.BasesDeDatos.demo.model.HistoriaEstudiante;
+import com.BasesDeDatos.demo.model.HistoriaEstudianteProjection;
 import com.BasesDeDatos.demo.model.Pensum;
-import com.BasesDeDatos.demo.service.PensumService;
-import com.BasesDeDatos.demo.service.ProgramaService;
-import com.BasesDeDatos.demo.service.TercPensumService;
-import com.BasesDeDatos.demo.service.TerceroService;
+import com.BasesDeDatos.demo.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +27,9 @@ public class MatriculaController {
     @Autowired
     private ProgramaService programaService;
 
+    @Autowired
+    private HistoriaEstudianteService historiaEstudianteService;
+
     @GetMapping
     public String mostrarFormulario(Model model) {
 
@@ -46,14 +48,32 @@ public class MatriculaController {
         return pensumService.listarPorPrograma(programaId);
     }
 
-    // Procesar la matrícula de primíparo
     @PostMapping("/guardar")
     public String registrarMatricula(
             @RequestParam("terceroId") Long terceroId,
-            @RequestParam("pensumId") Long pensumId) {
+            @RequestParam("pensumId") Long pensumId,
+            Model model) {
 
         tercPensumService.registrarMatricula(terceroId, pensumId);
 
-        return "redirect:/matriculas";
+        model.addAttribute(
+                "terceros",
+                terceroService.listarTodosPorTipo("0")
+        );
+
+        model.addAttribute(
+                "programas",
+                programaService.listarTodos()
+        );
+
+        model.addAttribute(
+                "matriculas",
+                historiaEstudianteService.listarPorEstudiante(terceroId)
+        );
+
+        List<HistoriaEstudiante> matriculas =
+                historiaEstudianteService.listarPorEstudiante(terceroId);
+
+        return "matriculas";
     }
 }
