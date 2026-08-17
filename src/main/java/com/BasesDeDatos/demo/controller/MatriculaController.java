@@ -31,7 +31,7 @@ public class MatriculaController {
     @GetMapping
     public String mostrarFormulario(Model model) {
 
-        model.addAttribute("terceros", terceroService.listarTodos());
+        model.addAttribute("terceros", terceroService.listarTodosPorTipo("0"));
         model.addAttribute("programas", programaService.listarTodos());
         /*model.addAttribute("pensums", pensumService.listarTodos());*/
 

@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static java.util.Locale.filter;
+
 
 @Service
 public class TerceroService {
@@ -18,6 +20,10 @@ public class TerceroService {
     //Obtener la lista de todos los terceros registrados
     public List<Tercero> listarTodos(){
         return terceroRepository.findAll();
+    }
+
+    public List<Tercero> listarTodosPorTipo(String tipo) {
+        return terceroRepository.findByTipo(tipo);
     }
 
     //Metodo para guardar con el procedimiento de guardado

@@ -6,9 +6,11 @@ import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
-public interface TerceroRepository  extends JpaRepository<Tercero, Long>{
+public interface TerceroRepository  extends JpaRepository<Tercero, Long> {
     //Mapeo del procedimiento de almacenado
     @Procedure(procedureName = "SP_ING_TERCEROS")
     void registrarTercero(
@@ -23,21 +25,24 @@ public interface TerceroRepository  extends JpaRepository<Tercero, Long>{
         @Param("TIPO") String tipo
     );
 
-        //Procedimiento de actualización de terceros
+    //Procedimiento de actualización de terceros
     @Procedure(procedureName = "SP_ACT_TERCEROS")
     void actualizarTercero(
-        @Param("CODIGO") Long codigo,
-        @Param("TIPO_DOC") String tipoDoc,
-        @Param("NRO_DOC") String nroDoc,
-        @Param("GENERO") String genero
+            @Param("CODIGO") Long codigo,
+            @Param("TIPO_DOC") String tipoDoc,
+            @Param("NRO_DOC") String nroDoc,
+            @Param("GENERO") String genero
     );
 
     //Procedimiento de eliminación de terceros
     @Procedure(procedureName = "SP_ELI_TERCEROS")
     void eliminarTercero(
-        @Param("CODIGO") Long codigo
+            @Param("CODIGO") Long codigo
     );
+
     // Busca un tercero que coincida con el número de documento y la clave
     Tercero findByNroDocAndClave(String nroDoc, String clave);
+
+    List<Tercero> findByTipo(String tipo);
 
 }
