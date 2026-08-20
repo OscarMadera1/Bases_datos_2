@@ -14,11 +14,11 @@
 <body>
     <!-- Botón de Cerrar Sesión (Esquina superior derecha flotante) -->
     <div style="position: absolute; top: 20px; right: 25px;">
-        <form th:action="@{/logout}" method="post" style="margin: 0;">
-            <button type="submit" class="btn btn-danger btn-sm fw-bold shadow-sm"
-                style="padding: 6px 14px; font-size: 0.85rem; border-radius: 8px; opacity: 0.9;">
-                Cerrar Sesión
-            </button>
+        <!-- Enviar petición POST (Recomendado con Spring Security) -->
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn btn-danger">Cerrar Sesión</button>
+        </form>
+
         </form>
     </div>
     <div class="container">
