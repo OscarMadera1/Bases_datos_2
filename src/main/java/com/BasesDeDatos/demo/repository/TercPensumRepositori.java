@@ -18,9 +18,11 @@ public interface TercPensumRepositori extends JpaRepository<TercPensum, TercPens
         @Param("P_ID") Long pesumId
     );
 
+    // CORRECCIÓN: Se usa COUNT manual para evitar el "fetch first rows only" incompatible con Oracle 11g
+    @Query("SELECT COUNT(tp) > 0 FROM TercPensum tp WHERE tp.terceroId = :terceroId AND tp.pensumId = :pensumId")
     boolean existsByTerceroIdAndPensumId(
-            Long terceroId,
-            Long pensumId
+            @Param("terceroId") Long terceroId, 
+            @Param("pensumId") Long pensumId
     );
 
     @Query("""
