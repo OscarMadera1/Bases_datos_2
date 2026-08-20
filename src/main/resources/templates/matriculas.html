@@ -12,11 +12,11 @@
 </head>
 
 <body>
-    <div class="container py-4">
+    <!-- Se añadió un margen superior (mt-5 pt-5) por si tienes un menú fijo en tu layout -->
+    <div class="container mt-5 pt-5 pb-4">
         
-        <!-- Reloj y Botón Volver -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <a href="/portal" class="text-decoration-none text-white fw-bold">&larr; Volver al portal</a>
+        <!-- Reloj -->
+        <div class="d-flex justify-content-end mb-4">
             <div id="liveClock" class="reloj-institucional text-end">Cargando fecha y hora...</div>
         </div>
 
@@ -71,8 +71,14 @@
                     <!-- MENSAJE DE ESTADO -->
                     <div id="mensaje" class="mt-4 text-center fw-bold fs-6"></div>
 
-                    <!-- ACCIONES -->
-                    <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+                    <!-- ACCIONES: Aquí se colocó el botón de Volver al Portal -->
+                    <div class="d-flex justify-content-between align-items-center mt-4 pt-4 border-top">
+                        <!-- Enlace para volver -->
+                        <a href="/portal" class="btn btn-outline-secondary btn-lg fw-bold px-4">
+                            &larr; Volver al portal
+                        </a>
+                        
+                        <!-- Botón de matricular -->
                         <button type="submit" id="btnMatricular" class="btn btn-primary btn-lg fw-bold px-5 shadow-sm">
                             Matricular Estudiante
                         </button>
@@ -113,115 +119,10 @@
 
     </div>
 
-    <!-- Scripts Bootstrap, jQuery y tu app.js (para el reloj) -->
+    <!-- Scripts Bootstrap, jQuery y tu app.js -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/app.js"></script>
-
-    <!-- Script específico de la lógica de matrícula (Promedios y Pensum) -->
-    <script>
-        const terceroSelect = document.getElementById("terceroId");
-        const programaSelect = document.getElementById("programaId");
-        const pensumSelect = document.getElementById("pensumId");
-        const mensaje = document.getElementById("mensaje");
-        const btnMatricular = document.getElementById("btnMatricular");
-        
-        const promedioContainer = document.getElementById("promedioContainer");
-        const promedioValor = document.getElementById("promedioValor");
-
-        /* ==========================================
-         * 1. CALCULAR PROMEDIO AL SELECCIONAR ESTUDIANTE
-         * ========================================== */
-        terceroSelect.addEventListener("change", function() {
-            const estudianteId = this.value;
-            
-            // Reiniciar interfaz
-            promedioContainer.classList.add("d-none"); // Oculta usando clase Bootstrap
-            promedioContainer.classList.remove("alert-danger", "alert-info", "alert-warning");
-            mensaje.textContent = "";
-            btnMatricular.disabled = false;
-
-            if(estudianteId) {
-                fetch(`/matriculas/promedio/${estudianteId}`)
-                    .then(response => response.json())
-                    .then(promedio => {
-                        promedioContainer.classList.remove("d-none"); // Muestra
-                        promedioValor.textContent = promedio.toFixed(2);
-                        
-                        // REGLA DE PRE-MATRÍCULA: Promedio
-                        if(promedio > 0 && promedio < 3.0) {
-                            promedioContainer.classList.add("alert-danger"); // Color Rojo Bootstrap
-                            mensaje.textContent = "⚠️ Atención: El estudiante se encuentra en prueba condicional por promedio inferior a 3.0.";
-                            mensaje.className = "mt-4 text-center fw-bold text-danger";
-                            // btnMatricular.disabled = true; // Descomenta si deseas bloquear matrícula
-                        } else if (promedio === 0) {
-                            promedioContainer.classList.add("alert-warning"); // Amarillo
-                            mensaje.textContent = "Estudiante nuevo (Sin promedio calculado).";
-                            mensaje.className = "mt-4 text-center fw-bold text-warning";
-                        } else {
-                            promedioContainer.classList.add("alert-info"); // Azul
-                            mensaje.textContent = "✅ Estudiante apto para pre-matrícula.";
-                            mensaje.className = "mt-4 text-center fw-bold text-primary";
-                        }
-                    })
-                    .catch(err => console.error("Error al obtener promedio:", err));
-            }
-        });
-
-        /* ==========================================
-         * 2. CARGAR PENSUMS SEGÚN EL PROGRAMA
-         * ========================================== */
-        programaSelect.addEventListener("change", function () {
-            const programaId = this.value;
-            pensumSelect.innerHTML = '<option value="">Cargando pensums...</option>';
-            pensumSelect.disabled = true;
-            mensaje.textContent = "";
-
-            if (!programaId) {
-                pensumSelect.innerHTML = '<option value="">Seleccione primero un programa</option>';
-                return;
-            }
-
-            fetch(`/matriculas/pensums/${programaId}`)
-                .then(response => {
-                    if (!response.ok) throw new Error("Error en red");
-                    return response.json();
-                })
-                .then(pensums => {
-                    pensumSelect.innerHTML = '<option value="">Seleccione un pensum</option>';
-                    if (pensums.length === 0) {
-                        pensumSelect.innerHTML = '<option value="">No hay pensums disponibles</option>';
-                        mensaje.textContent = "El programa seleccionado no tiene pensums registrados.";
-                        mensaje.className = "mt-4 text-center fw-bold text-danger";
-                        pensumSelect.disabled = true;
-                        return;
-                    }
-                    pensums.forEach(pensum => {
-                        const option = document.createElement("option");
-                        option.value = pensum.id;
-                        option.textContent = `${pensum.id} - Periodo ${pensum.periodo}`;
-                        pensumSelect.appendChild(option);
-                    });
-                    pensumSelect.disabled = false;
-                })
-                .catch(error => {
-                    pensumSelect.innerHTML = '<option value="">Error cargando pensums</option>';
-                    pensumSelect.disabled = true;
-                    mensaje.textContent = "Ocurrió un error al cargar los pensums.";
-                    mensaje.className = "mt-4 text-center fw-bold text-danger";
-                });
-        });
-
-        /* ==========================================
-         * 3. VALIDACIÓN FINAL DEL FORMULARIO
-         * ========================================== */
-        document.querySelector("form").addEventListener("submit", function (event) {
-            if (!terceroSelect.value || !programaSelect.value || !pensumSelect.value) {
-                event.preventDefault();
-                alert("Debe completar todos los campos obligatorios (Estudiante, Programa y Pensum).");
-            }
-        });
-    </script>
 </body>
 
 </html>

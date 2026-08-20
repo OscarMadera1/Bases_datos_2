@@ -187,3 +187,117 @@ function editarAsignatura(btn) {
 
     if (modalAsignatura) modalAsignatura.show();
 }
+
+/* ==========================================
+ * ==================== GESTIÓN DE MATRÍCULAS ==================== 
+ * ========================================== */
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. Validar si estamos en la vista de matrículas buscando un elemento clave
+    const terceroSelect = document.getElementById("terceroId");
+    if (!terceroSelect) return; // Si no existe, corta la ejecución aquí (estamos en otra página)
+
+    const programaSelect = document.getElementById("programaId");
+    const pensumSelect = document.getElementById("pensumId");
+    const mensaje = document.getElementById("mensaje");
+    const btnMatricular = document.getElementById("btnMatricular");
+    const promedioContainer = document.getElementById("promedioContainer");
+    const promedioValor = document.getElementById("promedioValor");
+    const formMatricula = terceroSelect.closest("form"); // Obtiene el formulario que lo envuelve
+
+    /* ==========================================
+     * 1. CALCULAR PROMEDIO AL SELECCIONAR ESTUDIANTE
+     * ========================================== */
+    terceroSelect.addEventListener("change", function() {
+        const estudianteId = this.value;
+        
+        // Reiniciar interfaz
+        promedioContainer.classList.add("d-none"); // Oculta usando clase Bootstrap
+        promedioContainer.classList.remove("alert-danger", "alert-info", "alert-warning");
+        mensaje.textContent = "";
+        btnMatricular.disabled = false;
+
+        if(estudianteId) {
+            fetch(`/matriculas/promedio/${estudianteId}`)
+                .then(response => response.json())
+                .then(promedio => {
+                    promedioContainer.classList.remove("d-none"); // Muestra
+                    promedioValor.textContent = promedio.toFixed(2);
+                    
+                    // REGLA DE PRE-MATRÍCULA: Promedio
+                    if(promedio > 0 && promedio < 3.0) {
+                        promedioContainer.classList.add("alert-danger"); // Color Rojo Bootstrap
+                        mensaje.textContent = "⚠️ Atención: El estudiante se encuentra en prueba condicional por promedio inferior a 3.0.";
+                        mensaje.className = "mt-4 text-center fw-bold text-danger";
+                        // btnMatricular.disabled = true; // Descomenta si deseas bloquear matrícula
+                    } else if (promedio === 0) {
+                        promedioContainer.classList.add("alert-warning"); // Amarillo
+                        mensaje.textContent = "Estudiante nuevo (Sin promedio calculado).";
+                        mensaje.className = "mt-4 text-center fw-bold text-warning";
+                    } else {
+                        promedioContainer.classList.add("alert-info"); // Azul
+                        mensaje.textContent = "✅ Estudiante apto para pre-matrícula.";
+                        mensaje.className = "mt-4 text-center fw-bold text-primary";
+                    }
+                })
+                .catch(err => console.error("Error al obtener promedio:", err));
+        }
+    });
+
+    /* ==========================================
+     * 2. CARGAR PENSUMS SEGÚN EL PROGRAMA
+     * ========================================== */
+    if(programaSelect) {
+        programaSelect.addEventListener("change", function () {
+            const programaId = this.value;
+            pensumSelect.innerHTML = '<option value="">Cargando pensums...</option>';
+            pensumSelect.disabled = true;
+            mensaje.textContent = "";
+
+            if (!programaId) {
+                pensumSelect.innerHTML = '<option value="">Seleccione primero un programa</option>';
+                return;
+            }
+
+            fetch(`/matriculas/pensums/${programaId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error("Error en red");
+                    return response.json();
+                })
+                .then(pensums => {
+                    pensumSelect.innerHTML = '<option value="">Seleccione un pensum</option>';
+                    if (pensums.length === 0) {
+                        pensumSelect.innerHTML = '<option value="">No hay pensums disponibles</option>';
+                        mensaje.textContent = "El programa seleccionado no tiene pensums registrados.";
+                        mensaje.className = "mt-4 text-center fw-bold text-danger";
+                        pensumSelect.disabled = true;
+                        return;
+                    }
+                    pensums.forEach(pensum => {
+                        const option = document.createElement("option");
+                        option.value = pensum.id;
+                        option.textContent = `${pensum.id} - Periodo ${pensum.periodo}`;
+                        pensumSelect.appendChild(option);
+                    });
+                    pensumSelect.disabled = false;
+                })
+                .catch(error => {
+                    pensumSelect.innerHTML = '<option value="">Error cargando pensums</option>';
+                    pensumSelect.disabled = true;
+                    mensaje.textContent = "Ocurrió un error al cargar los pensums.";
+                    mensaje.className = "mt-4 text-center fw-bold text-danger";
+                });
+        });
+    }
+
+    /* ==========================================
+     * 3. VALIDACIÓN FINAL DEL FORMULARIO
+     * ========================================== */
+    if (formMatricula) {
+        formMatricula.addEventListener("submit", function (event) {
+            if (!terceroSelect.value || !programaSelect.value || !pensumSelect.value) {
+                event.preventDefault();
+                alert("Debe completar todos los campos obligatorios (Estudiante, Programa y Pensum).");
+            }
+        });
+    }
+});
