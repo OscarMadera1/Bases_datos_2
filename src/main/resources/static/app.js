@@ -44,9 +44,9 @@ $(document).ready(function () {
     });
 
     // 5. Calcular Promedio en tiempo real (Pantalla Pre-Matricula)
-    $('#btnCalcularPromedio').click(function() {
+    $('#btnCalcularPromedio').click(function () {
         let estudianteId = $('#terceroId').val();
-        
+
         if (!estudianteId) {
             alert('Por favor, seleccione un estudiante primero.');
             return;
@@ -57,12 +57,12 @@ $(document).ready(function () {
         btn.text('Calculando...').prop('disabled', true);
 
         // Llamada a la ruta raíz para calcular el promedio
-        $.get('/promedios/' + estudianteId, function(data) {
+        $.get('/promedios/' + estudianteId, function (data) {
             $('#promedioValor').text(parseFloat(data).toFixed(2));
-            
+
             let contenedor = $('#promedioContainer');
             contenedor.removeClass('d-none alert-success alert-danger');
-            
+
             if (data >= 3.0) {
                 contenedor.addClass('alert-success');
             } else {
@@ -70,7 +70,7 @@ $(document).ready(function () {
             }
 
             btn.text(textoOriginal).prop('disabled', false);
-        }).fail(function() {
+        }).fail(function () {
             alert('Error al conectar con la base de datos para calcular el promedio.');
             btn.text(textoOriginal).prop('disabled', false);
         });
@@ -89,9 +89,9 @@ $(document).ready(function () {
     });
 
     // Botón para calcular el promedio (Ejecuta SP_PROMEDIO o actualiza tabla)
-    $('#btnCalcularPromedioPantalla').click(function() {
+    $('#btnCalcularPromedioPantalla').click(function () {
         let estudianteId = $('#terceroPromedioId').val();
-        
+
         if (!estudianteId) {
             alert('Por favor, seleccione una opción del menú desplegable.');
             return;
@@ -109,23 +109,23 @@ $(document).ready(function () {
         if (estudianteId === 'todos') {
             $('#resultadoPromedioValor').html('<span class="fs-5 text-primary">Consultando V_PROMEDIOS...</span>');
             contenedor.addClass('alert-info');
-            setTimeout(function() {
+            setTimeout(function () {
                 window.location.reload();
             }, 1500);
-            return; 
+            return;
         }
 
         // Lógica estudiante individual
-        $.get('/api/promedios/' + estudianteId, function(data) {
+        $.get('/api/promedios/' + estudianteId, function (data) {
             $('#resultadoPromedioValor').text(parseFloat(data).toFixed(2));
-            
+
             if (data >= 3.0) {
                 contenedor.addClass('alert-success');
             } else {
                 contenedor.addClass('alert-danger');
             }
             btn.text(textoOriginal).prop('disabled', false);
-        }).fail(function() {
+        }).fail(function () {
             alert('Ocurrió un error al ejecutar la función en la Base de Datos.');
             btn.text(textoOriginal).prop('disabled', false);
         });
@@ -314,10 +314,10 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // 2. Acción del botón "Matricular Estudiante" (Muestra la tabla intermedia TERC_PENSUMS)
+    // 2. Acción del botón "Asignar Pensums" (Usando Procedimiento Almacenado)
     const btnMatricularAccion = document.getElementById("btnMatricularAccion");
     if (btnMatricularAccion) {
-        btnMatricularAccion.addEventListener("click", function() {
+        btnMatricularAccion.addEventListener("click", function () {
             const estudianteId = $("#terceroId").val();
             const programaId = $("#programaId").val();
             const pensumId = $("#pensumId").val();
@@ -327,34 +327,61 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            $.get(`/prematricula/api/terc-pensum/${estudianteId}`, function(data) {
-                let html = "";
-                if (data && data.length > 0) {
-                    data.forEach(item => {
-                        html += `<tr>
-                            <td class="fw-bold">${item.pensId}</td>
-                            <td>${item.tercId}</td>
-                            <td>${item.tepePeriodo}</td>
-                            <td><button type="button" class="btn btn-dark btn-sm fw-bold px-3" onclick="examinarDetalle(${item.tercId})">Examina</button></td>
-                        </tr>`;
+            // Cambiar el estado del botón mientras carga
+            let textoOriginal = btnMatricularAccion.innerText;
+            btnMatricularAccion.innerText = "Asignando...";
+            btnMatricularAccion.disabled = true;
+
+            // Enviar la petición POST al nuevo endpoint del controlador
+            $.post('/prematricula/api/asignar-pensum', {
+                estudianteId: estudianteId,
+                pensumId: pensumId
+            })
+                .done(function (respuestaDelServidor) {
+                    console.log(respuestaDelServidor);
+
+                    // Si la asignación fue exitosa, consultamos la base de datos para refrescar la tabla
+                    $.get(`/prematricula/api/terc-pensum/${estudianteId}`, function (data) {
+                        let html = "";
+                        if (data && data.length > 0) {
+                            data.forEach(item => {
+                                html += `<tr>
+                                <td class="fw-bold">${item.pensId}</td>
+                                <td>${item.tercId}</td>
+                                <td>${item.tepePeriodo}</td>
+                                <td><button type="button" class="btn btn-dark btn-sm fw-bold px-3" onclick="examinarDetalle(${item.tercId})">Examina</button></td>
+                            </tr>`;
+                            });
+                        } else {
+                            html = `<tr><td colspan="4" class="text-center text-muted">Aún no hay registros.</td></tr>`;
+                        }
+
+                        // Actualizamos la vista
+                        $("#tbodyTercPensum").html(html);
+                        $("#divTercPensum").removeClass("d-none");
+                        $("#divDetalleAsignaturas").addClass("d-none");
+
+                        // Restauramos el botón
+                        btnMatricularAccion.innerText = textoOriginal;
+                        btnMatricularAccion.disabled = false;
                     });
-                } else {
-                    html = `<tr><td colspan="4" class="text-center text-muted">No hay registros de pensum para este estudiante.</td></tr>`;
-                }
-                $("#tbodyTercPensum").html(html);
-                $("#divTercPensum").removeClass("d-none");
-                $("#divDetalleAsignaturas").addClass("d-none");
-            });
+                })
+                .fail(function (jqXHR) {
+                    // Si el controlador devuelve un error (ej. Ya estaba asignado)
+                    alert(jqXHR.responseText || "Error de comunicación con el servidor.");
+                    btnMatricularAccion.innerText = textoOriginal;
+                    btnMatricularAccion.disabled = false;
+                });
         });
     }
 });
 
 // 3. Función global para el botón "Examina" (Muestra la tabla final detallada)
 function examinarDetalle(estudianteId) {
-    $.get(`/prematricula/api/detalle-asignaturas/${estudianteId}`, function(data) {
+    $.get(`/prematricula/api/detalle-asignaturas/${estudianteId}`, function (data) {
         let html = "";
         let total = data ? data.length : 0;
-        
+
         if (total > 0) {
             data.forEach(det => {
                 html += `<tr>
@@ -366,11 +393,11 @@ function examinarDetalle(estudianteId) {
         } else {
             html = `<tr><td colspan="3" class="text-center text-muted py-3">No hay asignaturas registradas.</td></tr>`;
         }
-        
+
         $("#tbodyDetalleAsignaturas").html(html);
         $("#badgeTotalAsignaturas").text(total);
         $("#divDetalleAsignaturas").removeClass("d-none");
-        
+
         document.getElementById("divDetalleAsignaturas").scrollIntoView({ behavior: 'smooth' });
     });
 }
@@ -381,8 +408,8 @@ function sortTable(n) {
     table = document.getElementById("reportTable");
     if (!table) return;
     switching = true;
-    dir = "asc"; 
-    
+    dir = "asc";
+
     while (switching) {
         switching = false;
         rows = table.rows;

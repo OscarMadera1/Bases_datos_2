@@ -7,7 +7,10 @@ import com.BasesDeDatos.demo.repository.PreMatriculaRepository;
 import com.BasesDeDatos.demo.service.PensumService;
 import com.BasesDeDatos.demo.service.ProgramaService;
 import com.BasesDeDatos.demo.service.TerceroService;
+import com.BasesDeDatos.demo.service.TercPensumService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +32,9 @@ public class PreMatriculaController {
 
     @Autowired
     private PensumService pensumService;
+
+    @Autowired
+    private TercPensumService tercPensumService;
 
     @GetMapping
     public String mostrarPantallaPreMatricula(Model model) {
@@ -61,5 +67,28 @@ public class PreMatriculaController {
     @ResponseBody
     public List<DetallePreMatriculaDTO> obtenerDetalleAsignaturas(@PathVariable Long estudianteId) {
         return preMatriculaRepository.consultarDetalleAsignaturas(estudianteId);
+    }
+
+    // MÉTODO POST CORREGIDO: Llama a tu servicio que ejecuta el Procedimiento Almacenado
+    @PostMapping("/api/asignar-pensum")
+    @ResponseBody
+    public ResponseEntity<String> asignarPensum(
+            @RequestParam("estudianteId") Long estudianteId,
+            @RequestParam("pensumId") Long pensumId) {
+        
+        try {
+            // Ejecutamos tu servicio
+            boolean exito = tercPensumService.registrarMatricula(estudianteId, pensumId);
+            
+            if (exito) {
+                return ResponseEntity.ok("Asignación guardada correctamente");
+            } else {
+                return ResponseEntity.badRequest().body("El estudiante ya tiene este pensum asignado.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); 
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al ejecutar el procedimiento almacenado: " + e.getMessage());
+        }
     }
 }

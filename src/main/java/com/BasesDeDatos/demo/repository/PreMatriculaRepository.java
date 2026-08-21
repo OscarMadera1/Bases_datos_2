@@ -64,6 +64,28 @@ public class PreMatriculaRepository {
         });
     }
 
+    // NUEVO MÉTODO: Insertar la asignación en TERC_PENSUMS
+    public boolean asignarPensumAEstudiante(Long estudianteId, Long pensumId, String periodo) {
+        try {
+            // Verificar primero si ya existe para evitar duplicados (Opcional, pero recomendado)
+            String sqlCheck = "SELECT COUNT(*) FROM TERC_PENSUMS WHERE TERC_ID = ? AND PENS_ID = ?";
+            Integer count = jdbcTemplate.queryForObject(sqlCheck, Integer.class, estudianteId, pensumId);
+            
+            if (count != null && count > 0) {
+                return false; // Ya estaba asignado
+            }
+
+            // Insertar el nuevo registro
+            String sqlInsert = "INSERT INTO TERC_PENSUMS (TERC_ID, PENS_ID, TEPE_PERIODO) VALUES (?, ?, ?)";
+            jdbcTemplate.update(sqlInsert, estudianteId, pensumId, periodo);
+            return true;
+            
+        } catch (Exception e) {
+            System.err.println("Error al asignar pensum: " + e.getMessage());
+            return false;
+        }
+    }
+
     // 2. Consultar la tabla TERC_PENSUMS para el estudiante seleccionado
     public List<TercPensumDTO> consultarTercPensum(Long estudianteId) {
         String sql = "SELECT PENS_ID, TERC_ID, TEPE_PERIODO FROM TERC_PENSUMS WHERE TERC_ID = ?";
