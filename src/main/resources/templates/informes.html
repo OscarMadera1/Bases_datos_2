@@ -62,6 +62,7 @@
             <div class="col-lg-9">
                 <div class="card card-menu card-glass h-100 shadow border-0 p-4">
                     <div class="card-body p-md-4">
+                        
                         <!-- 1. VISTA DE PRE-MATRÍCULA -->
                         <div th:if="${tipoReporte == 'prematricula'}">
                             <h3 class="h4 fw-bold text-primary mb-4">Reporte de Pre-matrícula</h3>
@@ -169,6 +170,14 @@
                                         </tbody>
                                     </table>
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. VISTA DE CERTIFICADOS (¡Nuevo!) -->
+                        <div th:if="${tipoReporte == 'certificados'}" class="text-center py-5">
+                            <h3 class="h4 fw-bold text-primary mb-4">Emisión de Certificados</h3>
+                            <div class="alert alert-info d-inline-block shadow-sm border-0 p-4">
+                                <h4 class="fw-bold mb-3">Para la próxima...</h4>
                             </div>
                         </div>
 
