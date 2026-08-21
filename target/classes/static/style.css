@@ -225,16 +225,44 @@ body {
     user-select: none;
     transition: background-color 0.2s;
 }
+
 .sortable:hover {
     background-color: #e9ecef !important;
 }
 
 /* Estilos de módulos portal */
-.module-btn { background-color: #ffffff; transition: all 0.3s ease; border: 2px solid transparent; border-radius: 8px; }
-.module-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.1) !important; }
-.module-btn-datos { border-color: #0d6efd !important; }
-.module-btn-datos h5 { color: #0d6efd !important; }
-.module-btn-procesos { border-color: #198754 !important; }
-.module-btn-procesos h5 { color: #198754 !important; }
-.module-btn-informes { border-color: #ffc107 !important; }
-.module-btn-informes h5 { color: #ffc107 !important; }
+.module-btn {
+    background-color: #ffffff;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    border-radius: 8px;
+}
+
+.module-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+.module-btn-datos {
+    border-color: #0d6efd !important;
+}
+
+.module-btn-datos h5 {
+    color: #0d6efd !important;
+}
+
+.module-btn-procesos {
+    border-color: #198754 !important;
+}
+
+.module-btn-procesos h5 {
+    color: #198754 !important;
+}
+
+.module-btn-informes {
+    border-color: #ffc107 !important;
+}
+
+.module-btn-informes h5 {
+    color: #ffc107 !important;
+}
