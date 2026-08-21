@@ -34,6 +34,14 @@ $(document).ready(function() {
     // 3. Activar el Reloj en Tiempo Real
     actualizarReloj();
     setInterval(actualizarReloj, 1000);
+
+    // 4. Buscador en tiempo real para la tabla de informes de Pre-matrícula
+    $("#searchInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#reportTable tbody tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    });
 });
 
 /* ==================== RELOJ EN TIEMPO REAL ==================== */
@@ -103,19 +111,6 @@ function abrirModalRegistrarPrograma() {
     if (modalPrograma) modalPrograma.show();
 }
 
-/*function editarPrograma(btn) {
-    const id = btn.getAttribute('data-id');
-    const nombre = btn.getAttribute('data-programa');
-
-    document.getElementById('progId').value = id;
-    document.getElementById('progNombre').value = nombre;
-    const form = document.getElementById('programaForm');
-    if (form) form.action = '/programas/actualizar';
-    document.getElementById('modalTitleProg').innerText = 'Actualizar Programa (ID: ' + id + ')';
-    const btn = document.getElementById('btnSubmitProg');
-    if (btn) { btn.innerText = 'Actualizar Cambios'; btn.className = 'btn btn-warning text-dark fw-bold'; }
-    if (modalPrograma) modalPrograma.show();
-}*/
 function editarPrograma(btn) {
     const id = btn.getAttribute('data-id');
     const nombre = btn.getAttribute('data-programa');
@@ -128,7 +123,6 @@ function editarPrograma(btn) {
 
     document.getElementById('modalTitleProg').innerText = 'Actualizar Programa (ID: ' + id + ')';
 
-    // Cambiado de 'btn' a 'btnSubmit' para no sobreescribir el parámetro 'btn'
     const btnSubmit = document.getElementById('btnSubmitProg');
     if (btnSubmit) {
         btnSubmit.innerText = 'Actualizar Cambios';
@@ -138,7 +132,6 @@ function editarPrograma(btn) {
     if (modalPrograma) modalPrograma.show();
 }
 
-
 /* ==================== GESTIÓN DE ASIGNATURAS ==================== */
 function abrirModalRegistrarAsignatura() {
     const form = document.getElementById('asignaturaForm');
@@ -147,7 +140,6 @@ function abrirModalRegistrarAsignatura() {
         form.action = '/asignaturas/guardar'; 
     }
     
-    // Limpiar el ID explícitamente para indicar que es un registro nuevo (Oracle usará la secuencia)
     const idField = document.getElementById('asigId');
     if (idField) idField.value = ''; 
     
@@ -162,16 +154,14 @@ function abrirModalRegistrarAsignatura() {
     if (modalAsignatura) modalAsignatura.show();
 }
 
-
-
 function editarAsignatura(btn) {
     const id = btn.getAttribute('data-id');
-    const nombre = btn.getAttribute('data-nombre'); // CAMBIO AQUÍ
+    const nombre = btn.getAttribute('data-nombre');
     const creditos = btn.getAttribute('data-creditos');
     const codigo = btn.getAttribute('data-codigo');
 
     document.getElementById('asigId').value = id;
-    document.getElementById('asigNombre').value = nombre; // Usa la variable nombre
+    document.getElementById('asigNombre').value = nombre;
     document.getElementById('asigCreditos').value = creditos;
     document.getElementById('asigCodigo').value = codigo;
 
@@ -192,9 +182,8 @@ function editarAsignatura(btn) {
  * ==================== GESTIÓN DE MATRÍCULAS ==================== 
  * ========================================== */
 document.addEventListener("DOMContentLoaded", function() {
-    // 1. Validar si estamos en la vista de matrículas buscando un elemento clave
     const terceroSelect = document.getElementById("terceroId");
-    if (!terceroSelect) return; // Si no existe, corta la ejecución aquí (estamos en otra página)
+    if (!terceroSelect) return;
 
     const programaSelect = document.getElementById("programaId");
     const pensumSelect = document.getElementById("pensumId");
@@ -202,16 +191,12 @@ document.addEventListener("DOMContentLoaded", function() {
     const btnMatricular = document.getElementById("btnMatricular");
     const promedioContainer = document.getElementById("promedioContainer");
     const promedioValor = document.getElementById("promedioValor");
-    const formMatricula = terceroSelect.closest("form"); // Obtiene el formulario que lo envuelve
+    const formMatricula = terceroSelect.closest("form");
 
-    /* ==========================================
-     * 1. CALCULAR PROMEDIO AL SELECCIONAR ESTUDIANTE
-     * ========================================== */
     terceroSelect.addEventListener("change", function() {
         const estudianteId = this.value;
         
-        // Reiniciar interfaz
-        promedioContainer.classList.add("d-none"); // Oculta usando clase Bootstrap
+        promedioContainer.classList.add("d-none");
         promedioContainer.classList.remove("alert-danger", "alert-info", "alert-warning");
         mensaje.textContent = "";
         btnMatricular.disabled = false;
@@ -220,21 +205,19 @@ document.addEventListener("DOMContentLoaded", function() {
             fetch(`/matriculas/promedio/${estudianteId}`)
                 .then(response => response.json())
                 .then(promedio => {
-                    promedioContainer.classList.remove("d-none"); // Muestra
+                    promedioContainer.classList.remove("d-none");
                     promedioValor.textContent = promedio.toFixed(2);
                     
-                    // REGLA DE PRE-MATRÍCULA: Promedio
                     if(promedio > 0 && promedio < 3.0) {
-                        promedioContainer.classList.add("alert-danger"); // Color Rojo Bootstrap
+                        promedioContainer.classList.add("alert-danger");
                         mensaje.textContent = "⚠️ Atención: El estudiante se encuentra en prueba condicional por promedio inferior a 3.0.";
                         mensaje.className = "mt-4 text-center fw-bold text-danger";
-                        // btnMatricular.disabled = true; // Descomenta si deseas bloquear matrícula
                     } else if (promedio === 0) {
-                        promedioContainer.classList.add("alert-warning"); // Amarillo
+                        promedioContainer.classList.add("alert-warning");
                         mensaje.textContent = "Estudiante nuevo (Sin promedio calculado).";
                         mensaje.className = "mt-4 text-center fw-bold text-warning";
                     } else {
-                        promedioContainer.classList.add("alert-info"); // Azul
+                        promedioContainer.classList.add("alert-info");
                         mensaje.textContent = "✅ Estudiante apto para pre-matrícula.";
                         mensaje.className = "mt-4 text-center fw-bold text-primary";
                     }
@@ -243,9 +226,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    /* ==========================================
-     * 2. CARGAR PENSUMS SEGÚN EL PROGRAMA
-     * ========================================== */
     if(programaSelect) {
         programaSelect.addEventListener("change", function () {
             const programaId = this.value;
@@ -289,9 +269,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    /* ==========================================
-     * 3. VALIDACIÓN FINAL DEL FORMULARIO
-     * ========================================== */
     if (formMatricula) {
         formMatricula.addEventListener("submit", function (event) {
             if (!terceroSelect.value || !programaSelect.value || !pensumSelect.value) {
