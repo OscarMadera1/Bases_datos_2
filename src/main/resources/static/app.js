@@ -42,7 +42,96 @@ $(document).ready(function () {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
         });
     });
-});
+
+    // 5. Calcular Promedio en tiempo real (Pantalla Pre-Matricula)
+    $('#btnCalcularPromedio').click(function() {
+        let estudianteId = $('#terceroId').val();
+        
+        if (!estudianteId) {
+            alert('Por favor, seleccione un estudiante primero.');
+            return;
+        }
+
+        let btn = $(this);
+        let textoOriginal = btn.text();
+        btn.text('Calculando...').prop('disabled', true);
+
+        // Llamada a la ruta raíz para calcular el promedio
+        $.get('/promedios/' + estudianteId, function(data) {
+            $('#promedioValor').text(parseFloat(data).toFixed(2));
+            
+            let contenedor = $('#promedioContainer');
+            contenedor.removeClass('d-none alert-success alert-danger');
+            
+            if (data >= 3.0) {
+                contenedor.addClass('alert-success');
+            } else {
+                contenedor.addClass('alert-danger');
+            }
+
+            btn.text(textoOriginal).prop('disabled', false);
+        }).fail(function() {
+            alert('Error al conectar con la base de datos para calcular el promedio.');
+            btn.text(textoOriginal).prop('disabled', false);
+        });
+    });
+
+    // =========================================================================
+    // LÓGICA PARA LA NUEVA PANTALLA DE "ADMINISTRAR PROMEDIOS"
+    // =========================================================================
+
+    // Buscador para la tabla de administrar promedios
+    $("#searchInputPromedios").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#tablaGeneralPromedios tbody tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    });
+
+    // Botón para calcular el promedio (Ejecuta SP_PROMEDIO o actualiza tabla)
+    $('#btnCalcularPromedioPantalla').click(function() {
+        let estudianteId = $('#terceroPromedioId').val();
+        
+        if (!estudianteId) {
+            alert('Por favor, seleccione una opción del menú desplegable.');
+            return;
+        }
+
+        let btn = $(this);
+        let textoOriginal = btn.text();
+        btn.text('Consultando BD...').prop('disabled', true);
+
+        // Limpiar estilos previos del contenedor
+        let contenedor = $('#resultadoPromedioContainer');
+        contenedor.removeClass('d-none alert-success alert-danger alert-info');
+
+        // Lógica "Todos los estudiantes"
+        if (estudianteId === 'todos') {
+            $('#resultadoPromedioValor').html('<span class="fs-5 text-primary">Consultando V_PROMEDIOS...</span>');
+            contenedor.addClass('alert-info');
+            setTimeout(function() {
+                window.location.reload();
+            }, 1500);
+            return; 
+        }
+
+        // Lógica estudiante individual
+        $.get('/api/promedios/' + estudianteId, function(data) {
+            $('#resultadoPromedioValor').text(parseFloat(data).toFixed(2));
+            
+            if (data >= 3.0) {
+                contenedor.addClass('alert-success');
+            } else {
+                contenedor.addClass('alert-danger');
+            }
+            btn.text(textoOriginal).prop('disabled', false);
+        }).fail(function() {
+            alert('Ocurrió un error al ejecutar la función en la Base de Datos.');
+            btn.text(textoOriginal).prop('disabled', false);
+        });
+    });
+
+}); // <--- FIN DEL DOCUMENT READY. (Todo el código de eventos debe ir arriba de esta línea)
 
 /* ==================== RELOJ EN TIEMPO REAL ==================== */
 function actualizarReloj() {
@@ -197,7 +286,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            // CORREGIDO: Ruta apuntando correctamente al endpoint de pre-matrícula
             fetch(`/prematricula/pensums/${programaId}`)
                 .then(response => {
                     if (!response.ok) throw new Error("Error en red");

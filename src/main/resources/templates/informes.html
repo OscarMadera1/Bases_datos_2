@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,17 +7,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/style.css}">
 </head>
-
 <body>
-    <!-- Contenedor principal con espacio superior garantizado (mt-5) -->
     <div class="container mt-5 mb-5 pt-3">
-
         <!-- Fecha y Hora en tiempo real -->
         <div class="d-flex justify-content-end mb-2">
             <div id="liveClock" class="reloj-institucional text-end">Cargando fecha y hora...</div>
         </div>
-        
-        <!-- Enlace Volver -->
         <a th:href="@{/portalMatricula}" class="text-decoration-none text-white-50 mb-3 d-inline-block">&larr; Volver al portal Matrícula</a>
 
         <!-- Cabecera Institucional Completa -->
@@ -29,7 +23,6 @@
         </div>
 
         <div class="row g-4">
-
             <!-- ==========================================
                  MENÚ LATERAL DE REPORTES
                  ========================================== -->
@@ -69,11 +62,9 @@
             <div class="col-lg-9">
                 <div class="card card-menu card-glass h-100 shadow border-0 p-4">
                     <div class="card-body p-md-4">
-
                         <!-- 1. VISTA DE PRE-MATRÍCULA -->
                         <div th:if="${tipoReporte == 'prematricula'}">
                             <h3 class="h4 fw-bold text-primary mb-4">Reporte de Pre-matrícula</h3>
-
                             <form th:action="@{/informes}" method="get" class="mb-4 bg-light p-3 rounded border">
                                 <input type="hidden" name="tipo" value="prematricula">
                                 <div class="row g-2 align-items-end">
@@ -81,10 +72,9 @@
                                         <label for="estudianteId" class="form-label fw-bold small text-muted">Seleccione un estudiante:</label>
                                         <select id="estudianteId" name="estudianteId" class="form-select" required>
                                             <option value="">Seleccione...</option>
-                                            <option th:each="estudiante : ${estudiantes}" 
-                                                    th:value="${estudiante.id}" 
-                                                    th:text="${estudiante.nroDoc + ' - ' + estudiante.nombres + ' ' + estudiante.apellidos}"
-                                                    th:selected="${estudianteSeleccionado == estudiante.id}">
+                                            <option th:each="estudiante : ${estudiantes}" th:value="${estudiante.id}"
+                                                th:text="${estudiante.nroDoc + ' - ' + estudiante.nombres + ' ' + estudiante.apellidos}"
+                                                th:selected="${estudianteSeleccionado == estudiante.id}">
                                             </option>
                                         </select>
                                     </div>
@@ -93,7 +83,6 @@
                                     </div>
                                 </div>
                             </form>
-
                             <div th:if="${estudianteSeleccionado != null}">
                                 <div class="mb-3">
                                     <input type="text" id="searchInput" class="form-control" placeholder="🔍 Buscar asignatura o código...">
@@ -130,7 +119,6 @@
                                 <h3 class="h4 fw-bold text-primary m-0">Registro de Auditoría de Notas</h3>
                                 <span class="badge bg-secondary" th:text="${#lists.size(auditorias) + ' registros'}"></span>
                             </div>
-
                             <!-- Filtros -->
                             <div class="row g-2 mb-4">
                                 <div class="col-md-8">
@@ -146,7 +134,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <!-- Tabla con ordenamiento -->
                             <div class="card shadow-sm border-0">
                                 <div class="table-responsive table-scroll-container">
@@ -163,7 +150,8 @@
                                         </thead>
                                         <tbody class="border-top-0">
                                             <tr th:each="aud : ${auditorias}">
-                                                <td class="ps-4 text-nowrap" th:text="${#dates.format(aud.fecha, 'dd/MM/yyyy HH:mm')}" 
+                                                <td class="ps-4 text-nowrap"
+                                                    th:text="${#dates.format(aud.fecha, 'dd/MM/yyyy HH:mm')}"
                                                     th:attr="data-date=${#dates.format(aud.fecha, 'yyyy-MM-dd')}"></td>
                                                 <td th:text="${aud.usuario}"></td>
                                                 <td class="fw-medium" th:text="${aud.nombres + ' ' + aud.apellidos}"></td>
@@ -184,10 +172,51 @@
                             </div>
                         </div>
 
-                        <!-- 3 Y 4. OTROS MÓDULOS -->
-                        <div th:if="${tipoReporte != 'prematricula' and tipoReporte != 'auditoria'}">
-                            <h3 class="h4 fw-bold text-primary mb-4" th:text="'Módulo de ' + ${tipoReporte.substring(0,1).toUpperCase() + tipoReporte.substring(1)}"></h3>
-                            <p class="text-muted">Sección en desarrollo.</p>
+                        <!-- 4. VISTA DE PROMEDIOS -->
+                        <div th:if="${tipoReporte == 'promedios'}">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h3 class="h4 fw-bold text-primary m-0">Reporte General de Promedios</h3>
+                                <span class="badge bg-primary" th:text="${#lists.size(promedios) + ' estudiantes'}"></span>
+                            </div>
+                            <p class="text-muted small mb-4">Listado de rendimiento académico consolidado desde la vista (V_PROMEDIOS).</p>
+
+                            <!-- Buscador -->
+                            <div class="mb-3">
+                                <input type="text" id="searchInput" class="form-control" placeholder="🔍 Buscar por nombre, apellido o ID...">
+                            </div>
+
+                            <!-- Tabla de Promedios -->
+                            <div class="card shadow-sm border-0">
+                                <div class="table-responsive table-scroll-container">
+                                    <table class="table table-hover align-middle mb-0" id="reportTable">
+                                        <thead class="table-light sticky-top">
+                                            <tr>
+                                                <th class="ps-4 sortable" onclick="sortTable(0)">ID Estudiante <span>↕</span></th>
+                                                <th class="sortable" onclick="sortTable(1)">Nombres <span>↕</span></th>
+                                                <th class="sortable" onclick="sortTable(2)">Apellidos <span>↕</span></th>
+                                                <th class="text-center sortable" onclick="sortTable(3)">Promedio <span>↕</span></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="prom : ${promedios}">
+                                                <td class="ps-4 fw-bold" th:text="${prom.tercId}"></td>
+                                                <td th:text="${prom.nombres}"></td>
+                                                <td th:text="${prom.apellidos}"></td>
+                                                <td class="text-center">
+                                                    <!-- Los colores cambian dinámicamente según el promedio -->
+                                                    <span class="badge fw-bold"
+                                                        th:classappend="${prom.promedio >= 3.0 ? 'bg-success' : 'bg-danger'}"
+                                                        th:text="${#numbers.formatDecimal(prom.promedio, 1, 2)}">
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr th:if="${promedios == null or promedios.isEmpty()}">
+                                                <td colspan="4" class="text-center text-muted py-4">No hay registros de promedios en la vista.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
 
                     </div>

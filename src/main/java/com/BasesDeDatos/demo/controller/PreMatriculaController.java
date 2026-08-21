@@ -2,9 +2,9 @@ package com.BasesDeDatos.demo.controller;
 
 import com.BasesDeDatos.demo.dto.DetallePreMatriculaDTO;
 import com.BasesDeDatos.demo.dto.TercPensumDTO;
-import com.BasesDeDatos.demo.model.Pensum; // Importa tu modelo Pensum
+import com.BasesDeDatos.demo.model.Pensum;
 import com.BasesDeDatos.demo.repository.PreMatriculaRepository;
-import com.BasesDeDatos.demo.service.PensumService;     // Inyectamos PensumService
+import com.BasesDeDatos.demo.service.PensumService;
 import com.BasesDeDatos.demo.service.ProgramaService;
 import com.BasesDeDatos.demo.service.TerceroService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,18 +28,15 @@ public class PreMatriculaController {
     private TerceroService terceroService;
 
     @Autowired
-    private PensumService pensumService; // Inyección de tu servicio de pensums
+    private PensumService pensumService;
 
-   // Muestra la vista cargando solo los estudiantes (TERC_TIPO = '0')
     @GetMapping
     public String mostrarPantallaPreMatricula(Model model) {
         model.addAttribute("programas", programaService.listarTodos());
-        // Filtramos usando tu método existente para traer únicamente a los estudiantes ('0')
-        model.addAttribute("estudiantes", terceroService.listarTodosPorTipo("0"));
+        model.addAttribute("estudiantes", terceroService.listarTodos());
         return "pre_matricula";
     }
 
-    // Proceso Batch de Pre-matrícula
     @PostMapping("/generar")
     public String ejecutarProcesoPreMatricula(
             @RequestParam("programaId") Long programaId,
@@ -48,14 +45,12 @@ public class PreMatriculaController {
         return "redirect:/prematricula?exito=true"; 
     }
 
-    // Endpoint JSON real conectado a tu PensumService
     @GetMapping("/pensums/{programaId}")
     @ResponseBody
     public List<Pensum> obtenerPensumsPorPrograma(@PathVariable Long programaId) {
         return pensumService.listarPorPrograma(programaId);
     }
 
-    // Endpoints JSON para el flujo paso a paso de la interfaz
     @GetMapping("/api/terc-pensum/{estudianteId}")
     @ResponseBody
     public List<TercPensumDTO> obtenerTercPensum(@PathVariable Long estudianteId) {

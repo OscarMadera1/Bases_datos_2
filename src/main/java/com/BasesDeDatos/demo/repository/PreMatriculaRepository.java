@@ -2,6 +2,7 @@ package com.BasesDeDatos.demo.repository;
 
 import com.BasesDeDatos.demo.dto.AuditoriaDTO;
 import com.BasesDeDatos.demo.dto.PreMatriculaDTO;
+import com.BasesDeDatos.demo.dto.PromedioDTO;
 import com.BasesDeDatos.demo.dto.TercPensumDTO;
 import com.BasesDeDatos.demo.dto.DetallePreMatriculaDTO;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,17 +27,19 @@ public class PreMatriculaRepository {
 
     public List<PreMatriculaDTO> consultarPreMatriculaPorEstudiante(Long estudianteId) {
         String sql = """
-                SELECT 
-                    p.PREM_PERIODO AS PERIODO, 
-                    a.ASIG_CODIGO AS ASIG_CODIGO, 
+                SELECT
+                    h.HIST_PERIODO AS PERIODO,
+                    a.ASIG_CODIGO AS ASIG_CODIGO,
                     a.ASIG_ASIGNATURA AS ASIG_NOMBRE
-                FROM PREMATRICULAS p
-                JOIN ASIGNATURAS a ON p.ASIG_ID = a.ASIG_ID
-                WHERE p.TERC_ID = ?
+                FROM HISTORIAS h
+                JOIN CURSOS c ON h.CURS_ID = c.CURS_ID
+                JOIN ASIGNATURAS a ON c.ASIG_ID = a.ASIG_ID
+                WHERE h.TERC_ID = ?
                 """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             PreMatriculaDTO dto = new PreMatriculaDTO();
+            // Llenamos el DTO original del reporte para no romper tu vista de Informes
             dto.setPeriodo(rs.getString("PERIODO"));
             dto.setAsigCodigo(rs.getString("ASIG_CODIGO"));
             dto.setAsigNombre(rs.getString("ASIG_NOMBRE"));
@@ -46,7 +49,6 @@ public class PreMatriculaRepository {
 
     public List<AuditoriaDTO> consultarAuditorias() {
         String sql = "SELECT * FROM V_AUDITORIAS ORDER BY AUDI_FECHA DESC";
-
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             AuditoriaDTO dto = new AuditoriaDTO();
             dto.setUsuario(rs.getString("AUDI_USUARIO"));
@@ -77,7 +79,7 @@ public class PreMatriculaRepository {
     // 3. Consultar el detalle final (Periodo, Docente Asignado, Nombre de la Asignatura)
     public List<DetallePreMatriculaDTO> consultarDetalleAsignaturas(Long estudianteId) {
         String sql = """
-                SELECT 
+                SELECT
                     h.HIST_PERIODO AS PERIODO,
                     t.TERC_NOMBRES || ' ' || t.TERC_APELLIDOS AS DOCENTE,
                     a.ASIG_ASIGNATURA AS ASIG_NOMBRE
@@ -94,5 +96,25 @@ public class PreMatriculaRepository {
             dto.setAsigNombre(rs.getString("ASIG_NOMBRE"));
             return dto;
         }, estudianteId);
+    }
+
+    // 1. Invocar la función SP_PROMEDIO para un estudiante específico (Retorna un número)
+    public Double calcularPromedioEstudiante(Long estudianteId) {
+        String sql = "SELECT SP_PROMEDIO(?) FROM DUAL";
+        Double promedio = jdbcTemplate.queryForObject(sql, Double.class, estudianteId);
+        return promedio != null ? promedio : 0.0;
+    }
+
+    // 2. Consultar la vista general de V_PROMEDIOS para el reporte
+    public List<PromedioDTO> consultarVistaPromedios() {
+        String sql = "SELECT TERC_ID, TERC_NOMBRES, TERC_APELLIDOS, PROMEDIO FROM V_PROMEDIOS ORDER BY PROMEDIO DESC";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            PromedioDTO dto = new PromedioDTO();
+            dto.setTercId(rs.getLong("TERC_ID"));
+            dto.setNombres(rs.getString("TERC_NOMBRES"));
+            dto.setApellidos(rs.getString("TERC_APELLIDOS"));
+            dto.setPromedio(rs.getDouble("PROMEDIO"));
+            return dto;
+        });
     }
 }

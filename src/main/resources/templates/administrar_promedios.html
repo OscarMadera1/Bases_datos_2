@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar Promedios | Sistema de Gestión</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+    <div class="container py-5">
+        
+        <!-- Navegación y Cabecera -->
+        <a th:href="@{/portalMatricula}" class="text-decoration-none text-white-50 mb-3 d-inline-block">&larr; Volver al portal</a>
+        
+        <div class="text-center text-white mb-5">
+            <span class="badge bg-primary px-3 py-2 mb-2 text-uppercase tracking-wider">Módulo Académico</span>
+            <h1 class="display-5 fw-bold">Administración de Promedios</h1>
+            <p class="lead text-light opacity-75">Cálculo en tiempo real y consulta general</p>
+        </div>
+
+        <!-- Tarjeta de Cálculo Individual -->
+        <div class="card card-menu card-glass shadow border-0 p-4 mb-5">
+            <h4 class="h5 fw-bold text-primary border-bottom pb-2 mb-3">Calcular Promedio (Función SP_PROMEDIO)</h4>
+            
+            <div class="row align-items-end g-3">
+                <div class="col-md-8">
+                    <label for="terceroPromedioId" class="form-label fw-bold small text-muted">Seleccione un Estudiante *</label>
+                    
+                    <select id="terceroPromedioId" class="form-select">
+                        <option value="">Seleccione un estudiante de la lista...</option>
+                        
+                        <!-- NUEVA OPCIÓN: Todos los estudiantes -->
+                        <option value="todos" class="fw-bold text-primary">Todos los estudiantes (Vista General)</option>
+                        
+                        <option th:each="est : ${estudiantes}" th:value="${est.id}"
+                            th:text="${est.nroDoc + ' - ' + est.nombres + ' ' + est.apellidos}">
+                        </option>
+                    </select>
+
+                </div>
+                <div class="col-md-4">
+                    <button type="button" id="btnCalcularPromedioPantalla" class="btn btn-primary w-100 fw-bold">
+                        Ejecutar Función
+                    </button>
+                </div>
+            </div>
+
+            <!-- Contenedor dinámico del resultado -->
+            <div id="resultadoPromedioContainer" class="alert d-none mt-4 d-flex justify-content-between align-items-center border">
+                <div>
+                    <span class="fw-medium">Cálculo completado en Base de Datos.</span>
+                    <strong class="ms-2">Promedio Actual: <span id="resultadoPromedioValor" class="fs-4 text-dark"></span></strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta de Tabla General -->
+        <div class="card card-menu card-glass shadow border-0 p-4">
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                <h4 class="h5 fw-bold text-secondary m-0">Tabla General de Rendimiento (V_PROMEDIOS)</h4>
+                <span class="badge bg-info text-dark" th:text="${promedios.size()} + ' estudiantes'"></span>
+            </div>
+            
+            <input class="form-control mb-3" id="searchInputPromedios" type="text" placeholder="🔍 Filtrar por nombre o ID...">
+            
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 bg-white" id="tablaGeneralPromedios">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID Estudiante</th>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>Promedio Consolidado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="prom : ${promedios}">
+                            <td class="fw-bold" th:text="${prom.tercId}"></td>
+                            <td th:text="${prom.nombres}"></td>
+                            <td th:text="${prom.apellidos}"></td>
+                            <td>
+                                <span class="badge w-75"
+                                      th:text="${#numbers.formatDecimal(prom.promedio, 1, 2)}"
+                                      th:classappend="${prom.promedio >= 3.0 ? 'bg-success' : 'bg-danger'}">
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script th:src="@{/app.js}"></script>
+</body>
+</html>

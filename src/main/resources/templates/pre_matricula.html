@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,10 +7,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/style.css}">
 </head>
-
 <body>
     <div class="container py-5">
-        
         <!-- Reloj y navegación -->
         <div class="d-flex justify-content-end mb-2">
             <div id="liveClock" class="reloj-institucional text-end">Cargando fecha y hora...</div>
@@ -28,33 +25,40 @@
         <!-- NIVEL 1: TARJETA PRINCIPAL (FORMULARIO) -->
         <div class="card card-menu card-glass shadow border-0 p-4 mb-4">
             <h4 class="h5 fw-bold text-primary border-bottom pb-2 mb-3">Información del Estudiante</h4>
-            
             <form id="formMatriculaProceso">
                 <div class="row g-3">
-                    <div class="col-md-12">
-                        <label for="terceroId" class="form-label fw-bold small text-muted">Estudiante *</label>
-                        <select id="terceroId" name="terceroId" class="form-select" required>
-                            <option value="">Seleccione un estudiante</option>
-                            <option th:each="est : ${estudiantes}" 
-                                    th:value="${est.id}" 
+                    <!-- Contenedor dinámico de Promedio -->
+                    <div id="promedioContainer" class="alert d-none mt-3 d-flex justify-content-between align-items-center border">
+                        <div>
+                            <span id="mensaje" class="fw-medium">Cálculo completado.</span>
+                            <strong class="ms-2">Promedio Actual: <span id="promedioValor" class="fs-5 text-primary"></span></strong>
+                        </div>
+                        <a th:href="@{/informes(tipo='promedios')}" class="btn btn-sm btn-dark fw-bold px-3">Ver Informe de Promedios</a>
+                    </div>
+
+                    <!-- Selector de estudiante con el nuevo botón -->
+                    <div class="col-md-12 d-flex align-items-end gap-2">
+                        <div class="flex-grow-1">
+                            <label for="terceroId" class="form-label fw-bold small text-muted">Estudiante *</label>
+                            <select id="terceroId" name="terceroId" class="form-select" required>
+                                <option value="">Seleccione un estudiante</option>
+                                <option th:each="est : ${estudiantes}" th:value="${est.id}"
                                     th:text="${est.nroDoc + ' - ' + est.nombres + ' ' + est.apellidos}">
-                            </option>
-                        </select>
+                                </option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="col-md-6">
                         <label for="programaId" class="form-label fw-bold small text-muted">Programa *</label>
                         <select id="programaId" name="programaId" class="form-select" required>
                             <option value="">Seleccione un programa</option>
-                            <option th:each="prog : ${programas}" 
-                                    th:value="${prog.id}" 
-                                    th:text="${prog.nombre}">
-                            </option>
+                            <option th:each="prog : ${programas}" th:value="${prog.id}" th:text="${prog.nombre}"></option>
                         </select>
                     </div>
 
                     <div class="col-md-6">
-                        <label for="pensumId" class="form-label fw-bold small text-muted">Pensum *</label>
+                        <label for="pensumId" class="form-label fw-bold small text-muted">Plan de Estudio (Versión Pensum) *</label>
                         <select id="pensumId" name="pensumId" class="form-select" required>
                             <option value="">Seleccione primero un programa</option>
                         </select>
@@ -68,7 +72,7 @@
             </form>
         </div>
 
-        <!-- NIVEL 2: DIV INTERMEDIO (TERC_PENSUMS) - Aparece al hacer clic en Matricular -->
+        <!-- NIVEL 2: DIV INTERMEDIO (TERC_PENSUMS) -->
         <div id="divTercPensum" class="card card-menu card-glass shadow border-0 p-4 mb-4 d-none">
             <h4 class="h5 fw-bold text-secondary border-bottom pb-2 mb-3">Información de Pensum del Estudiante (Terc_Pensums)</h4>
             <div class="table-responsive">
@@ -88,14 +92,13 @@
             </div>
         </div>
 
-        <!-- NIVEL 3: DIV FINAL (ASIGNATURAS Y DOCENTES) - Aparece al dar clic en Examina -->
+        <!-- NIVEL 3: DIV FINAL (ASIGNATURAS Y DOCENTES) -->
         <div id="divDetalleAsignaturas" class="card card-menu card-glass shadow border-0 p-4 mb-4 d-none">
             <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
                 <h4 class="h5 fw-bold text-success m-0">Asignaturas Matriculadas</h4>
                 <span class="badge bg-success" id="badgeTotalAsignaturas">0</span>
             </div>
             <p class="text-muted small">Lista de asignaturas que el estudiante seleccionado ya tiene registradas.</p>
-            
             <div class="table-responsive">
                 <table class="table table-striped table-hover align-middle mb-0 bg-white">
                     <thead class="table-dark">
@@ -111,9 +114,7 @@
                 </table>
             </div>
         </div>
-
     </div>
-
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

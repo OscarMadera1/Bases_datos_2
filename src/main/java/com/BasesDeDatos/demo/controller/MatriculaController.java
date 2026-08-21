@@ -87,4 +87,5 @@ public class MatriculaController {
     public BigDecimal obtenerPromedioEstudiante(@PathVariable Long terceroId) {
         return historiaService.calcularPromedioEstudiante(terceroId);
     }
+
 }
