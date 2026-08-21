@@ -2,6 +2,8 @@ package com.BasesDeDatos.demo.controller;
 
 import com.BasesDeDatos.demo.model.Tercero;
 import com.BasesDeDatos.demo.service.TerceroService;
+
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,16 +21,16 @@ public class LoginController {
     // 1. Mostrar la vista del Login
     @GetMapping("/")
     public String mostrarLogin() {
-        return "auth_login"; 
+        return "auth_login";
     }
 
     // 2. Procesar las credenciales
     @PostMapping("/auth/procesar")
-    public String procesarLogin(@RequestParam("username") String username, 
-                                @RequestParam("password") String password,
-                                HttpSession session,
-                                RedirectAttributes redirectAttributes) {
-        
+    public String procesarLogin(@RequestParam("username") String username,
+            @RequestParam("password") String password,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+
         // Buscamos al usuario en la base de datos
         Tercero usuarioLogueado = terceroService.autenticarUsuario(username, password);
 
@@ -36,31 +38,32 @@ public class LoginController {
         if (usuarioLogueado != null) {
             // Si el usuario existe, se guarda en la sesión y entra al portal
             session.setAttribute("usuario", usuarioLogueado);
-            return "redirect:/portal"; 
+            return "redirect:/portal";
         } else {
             // Si no existe, se devuelve al inicio con error
             redirectAttributes.addFlashAttribute("error", "Documento o contraseña incorrectos.");
-            return "redirect:/"; 
+            return "redirect:/";
         }
     }
 
     // 3. Vista del Portal (Ya no necesita validación manual gracias al Interceptor)
     @GetMapping("/portal")
     public String mostrarPortal() {
-        return "portal"; 
+        return "portal";
     }
 
     // 4. Vista del menú interno (Módulo de Datos)
     @GetMapping("/index")
     public String mostrarMenuPrincipal() {
-        return "index"; 
+        return "index";
     }
 
-    // 5. Ruta para cerrar sesión
-    @GetMapping("/logout")
-    public String cerrarSesion(HttpSession session) {
-        session.removeAttribute("usuario");
-        session.invalidate(); // Destruye la sesión por seguridad
-        return "redirect:/";
+   @PostMapping("/logout")
+    public String cerrarSesion(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate(); 
+        }
+        return "redirect:/"; 
     }
 }

@@ -23,4 +23,5 @@ public class WebConfig implements WebMvcConfigurer {
                         "/error"              // Deja libre la página de errores internos
                 );
     }
+    
 }

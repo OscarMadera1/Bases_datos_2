@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
@@ -75,5 +76,15 @@ public class MatriculaController {
                 historiaEstudianteService.listarPorEstudiante(terceroId);
 
         return "matriculas";
+    }
+
+    @Autowired
+    private HistoriaService historiaService; // Inyéctalo si no lo tienes
+
+    // NUEVO ENDPOINT PARA CONSULTAR EL PROMEDIO VÍA AJAX (FETCH)
+    @GetMapping("/promedio/{terceroId}")
+    @ResponseBody
+    public BigDecimal obtenerPromedioEstudiante(@PathVariable Long terceroId) {
+        return historiaService.calcularPromedioEstudiante(terceroId);
     }
 }
