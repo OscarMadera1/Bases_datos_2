@@ -178,67 +178,27 @@ function editarAsignatura(btn) {
     if (modalAsignatura) modalAsignatura.show();
 }
 
-/* ==========================================
- * ==================== GESTIÓN DE MATRÍCULAS ==================== 
- * ========================================== */
+/* ==========================================================
+ * ==================== GESTIÓN DE PRE-MATRÍCULA ============= 
+ * ========================================================== */
 document.addEventListener("DOMContentLoaded", function () {
-    const terceroSelect = document.getElementById("terceroId");
-    if (!terceroSelect) return;
-
     const programaSelect = document.getElementById("programaId");
     const pensumSelect = document.getElementById("pensumId");
-    const mensaje = document.getElementById("mensaje");
-    const btnMatricular = document.getElementById("btnMatricular");
-    const promedioContainer = document.getElementById("promedioContainer");
-    const promedioValor = document.getElementById("promedioValor");
-    const formMatricula = terceroSelect.closest("form");
 
-    terceroSelect.addEventListener("change", function () {
-        const estudianteId = this.value;
-
-        promedioContainer.classList.add("d-none");
-        promedioContainer.classList.remove("alert-danger", "alert-info", "alert-warning");
-        mensaje.textContent = "";
-        btnMatricular.disabled = false;
-
-        if (estudianteId) {
-            fetch(`/matriculas/promedio/${estudianteId}`)
-                .then(response => response.json())
-                .then(promedio => {
-                    promedioContainer.classList.remove("d-none");
-                    promedioValor.textContent = promedio.toFixed(2);
-
-                    if (promedio > 0 && promedio < 3.0) {
-                        promedioContainer.classList.add("alert-danger");
-                        mensaje.textContent = "⚠️ Atención: El estudiante se encuentra en prueba condicional por promedio inferior a 3.0.";
-                        mensaje.className = "mt-4 text-center fw-bold text-danger";
-                    } else if (promedio === 0) {
-                        promedioContainer.classList.add("alert-warning");
-                        mensaje.textContent = "Estudiante nuevo (Sin promedio calculado).";
-                        mensaje.className = "mt-4 text-center fw-bold text-warning";
-                    } else {
-                        promedioContainer.classList.add("alert-info");
-                        mensaje.textContent = "✅ Estudiante apto para pre-matrícula.";
-                        mensaje.className = "mt-4 text-center fw-bold text-primary";
-                    }
-                })
-                .catch(err => console.error("Error al obtener promedio:", err));
-        }
-    });
-
-    if (programaSelect) {
+    // 1. Cargar Pensums al cambiar el Programa
+    if (programaSelect && pensumSelect) {
         programaSelect.addEventListener("change", function () {
             const programaId = this.value;
             pensumSelect.innerHTML = '<option value="">Cargando pensums...</option>';
             pensumSelect.disabled = true;
-            mensaje.textContent = "";
 
             if (!programaId) {
                 pensumSelect.innerHTML = '<option value="">Seleccione primero un programa</option>';
                 return;
             }
 
-            fetch(`/matriculas/pensums/${programaId}`)
+            // CORREGIDO: Ruta apuntando correctamente al endpoint de pre-matrícula
+            fetch(`/prematricula/pensums/${programaId}`)
                 .then(response => {
                     if (!response.ok) throw new Error("Error en red");
                     return response.json();
@@ -247,46 +207,94 @@ document.addEventListener("DOMContentLoaded", function () {
                     pensumSelect.innerHTML = '<option value="">Seleccione un pensum</option>';
                     if (pensums.length === 0) {
                         pensumSelect.innerHTML = '<option value="">No hay pensums disponibles</option>';
-                        mensaje.textContent = "El programa seleccionado no tiene pensums registrados.";
-                        mensaje.className = "mt-4 text-center fw-bold text-danger";
                         pensumSelect.disabled = true;
                         return;
                     }
                     pensums.forEach(pensum => {
                         const option = document.createElement("option");
                         option.value = pensum.id;
-                        option.textContent = `${pensum.id} - Periodo ${pensum.periodo}`;
+                        option.textContent = `Pensum ID: ${pensum.id} - Periodo: ${pensum.periodo}`;
                         pensumSelect.appendChild(option);
                     });
                     pensumSelect.disabled = false;
                 })
                 .catch(error => {
+                    console.error("Error cargando pensums:", error);
                     pensumSelect.innerHTML = '<option value="">Error cargando pensums</option>';
                     pensumSelect.disabled = true;
-                    mensaje.textContent = "Ocurrió un error al cargar los pensums.";
-                    mensaje.className = "mt-4 text-center fw-bold text-danger";
                 });
         });
     }
 
-    if (formMatricula) {
-        formMatricula.addEventListener("submit", function (event) {
-            if (!terceroSelect.value || !programaSelect.value || !pensumSelect.value) {
-                event.preventDefault();
-                alert("Debe completar todos los campos obligatorios (Estudiante, Programa y Pensum).");
+    // 2. Acción del botón "Matricular Estudiante" (Muestra la tabla intermedia TERC_PENSUMS)
+    const btnMatricularAccion = document.getElementById("btnMatricularAccion");
+    if (btnMatricularAccion) {
+        btnMatricularAccion.addEventListener("click", function() {
+            const estudianteId = $("#terceroId").val();
+            const programaId = $("#programaId").val();
+            const pensumId = $("#pensumId").val();
+
+            if (!estudianteId || !programaId || !pensumId) {
+                alert("Por favor seleccione el estudiante, el programa y el pensum.");
+                return;
             }
+
+            $.get(`/prematricula/api/terc-pensum/${estudianteId}`, function(data) {
+                let html = "";
+                if (data && data.length > 0) {
+                    data.forEach(item => {
+                        html += `<tr>
+                            <td class="fw-bold">${item.pensId}</td>
+                            <td>${item.tercId}</td>
+                            <td>${item.tepePeriodo}</td>
+                            <td><button type="button" class="btn btn-dark btn-sm fw-bold px-3" onclick="examinarDetalle(${item.tercId})">Examina</button></td>
+                        </tr>`;
+                    });
+                } else {
+                    html = `<tr><td colspan="4" class="text-center text-muted">No hay registros de pensum para este estudiante.</td></tr>`;
+                }
+                $("#tbodyTercPensum").html(html);
+                $("#divTercPensum").removeClass("d-none");
+                $("#divDetalleAsignaturas").addClass("d-none");
+            });
         });
     }
 });
 
-// 5. Ordenamiento de tablas (Función global para informes)
+// 3. Función global para el botón "Examina" (Muestra la tabla final detallada)
+function examinarDetalle(estudianteId) {
+    $.get(`/prematricula/api/detalle-asignaturas/${estudianteId}`, function(data) {
+        let html = "";
+        let total = data ? data.length : 0;
+        
+        if (total > 0) {
+            data.forEach(det => {
+                html += `<tr>
+                    <td class="fw-bold text-primary">${det.periodo}</td>
+                    <td>${det.docenteAsignado}</td>
+                    <td>${det.asigNombre}</td>
+                </tr>`;
+            });
+        } else {
+            html = `<tr><td colspan="3" class="text-center text-muted py-3">No hay asignaturas registradas.</td></tr>`;
+        }
+        
+        $("#tbodyDetalleAsignaturas").html(html);
+        $("#badgeTotalAsignaturas").text(total);
+        $("#divDetalleAsignaturas").removeClass("d-none");
+        
+        document.getElementById("divDetalleAsignaturas").scrollIntoView({ behavior: 'smooth' });
+    });
+}
+
+/* ==================== ORDENAMIENTO DE TABLAS ==================== */
 function sortTable(n) {
     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
     table = document.getElementById("reportTable");
     if (!table) return;
     switching = true;
-    dir = "asc";
-
+    dir = "asc"; 
+    
     while (switching) {
         switching = false;
         rows = table.rows;
