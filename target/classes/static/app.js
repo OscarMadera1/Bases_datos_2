@@ -42,7 +42,96 @@ $(document).ready(function () {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
         });
     });
-});
+
+    // 5. Calcular Promedio en tiempo real (Pantalla Pre-Matricula)
+    $('#btnCalcularPromedio').click(function () {
+        let estudianteId = $('#terceroId').val();
+
+        if (!estudianteId) {
+            alert('Por favor, seleccione un estudiante primero.');
+            return;
+        }
+
+        let btn = $(this);
+        let textoOriginal = btn.text();
+        btn.text('Calculando...').prop('disabled', true);
+
+        // Llamada a la ruta raíz para calcular el promedio
+        $.get('/promedios/' + estudianteId, function (data) {
+            $('#promedioValor').text(parseFloat(data).toFixed(2));
+
+            let contenedor = $('#promedioContainer');
+            contenedor.removeClass('d-none alert-success alert-danger');
+
+            if (data >= 3.0) {
+                contenedor.addClass('alert-success');
+            } else {
+                contenedor.addClass('alert-danger');
+            }
+
+            btn.text(textoOriginal).prop('disabled', false);
+        }).fail(function () {
+            alert('Error al conectar con la base de datos para calcular el promedio.');
+            btn.text(textoOriginal).prop('disabled', false);
+        });
+    });
+
+    // =========================================================================
+    // LÓGICA PARA LA NUEVA PANTALLA DE "ADMINISTRAR PROMEDIOS"
+    // =========================================================================
+
+    // Buscador para la tabla de administrar promedios
+    $("#searchInputPromedios").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#tablaGeneralPromedios tbody tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    });
+
+    // Botón para calcular el promedio (Ejecuta SP_PROMEDIO o actualiza tabla)
+    $('#btnCalcularPromedioPantalla').click(function () {
+        let estudianteId = $('#terceroPromedioId').val();
+
+        if (!estudianteId) {
+            alert('Por favor, seleccione una opción del menú desplegable.');
+            return;
+        }
+
+        let btn = $(this);
+        let textoOriginal = btn.text();
+        btn.text('Consultando BD...').prop('disabled', true);
+
+        // Limpiar estilos previos del contenedor
+        let contenedor = $('#resultadoPromedioContainer');
+        contenedor.removeClass('d-none alert-success alert-danger alert-info');
+
+        // Lógica "Todos los estudiantes"
+        if (estudianteId === 'todos') {
+            $('#resultadoPromedioValor').html('<span class="fs-5 text-primary">Consultando V_PROMEDIOS...</span>');
+            contenedor.addClass('alert-info');
+            setTimeout(function () {
+                window.location.reload();
+            }, 1500);
+            return;
+        }
+
+        // Lógica estudiante individual
+        $.get('/api/promedios/' + estudianteId, function (data) {
+            $('#resultadoPromedioValor').text(parseFloat(data).toFixed(2));
+
+            if (data >= 3.0) {
+                contenedor.addClass('alert-success');
+            } else {
+                contenedor.addClass('alert-danger');
+            }
+            btn.text(textoOriginal).prop('disabled', false);
+        }).fail(function () {
+            alert('Ocurrió un error al ejecutar la función en la Base de Datos.');
+            btn.text(textoOriginal).prop('disabled', false);
+        });
+    });
+
+}); // <--- FIN DEL DOCUMENT READY. (Todo el código de eventos debe ir arriba de esta línea)
 
 /* ==================== RELOJ EN TIEMPO REAL ==================== */
 function actualizarReloj() {
@@ -178,67 +267,26 @@ function editarAsignatura(btn) {
     if (modalAsignatura) modalAsignatura.show();
 }
 
-/* ==========================================
- * ==================== GESTIÓN DE MATRÍCULAS ==================== 
- * ========================================== */
+/* ==========================================================
+ * ==================== GESTIÓN DE PRE-MATRÍCULA ============= 
+ * ========================================================== */
 document.addEventListener("DOMContentLoaded", function () {
-    const terceroSelect = document.getElementById("terceroId");
-    if (!terceroSelect) return;
-
     const programaSelect = document.getElementById("programaId");
     const pensumSelect = document.getElementById("pensumId");
-    const mensaje = document.getElementById("mensaje");
-    const btnMatricular = document.getElementById("btnMatricular");
-    const promedioContainer = document.getElementById("promedioContainer");
-    const promedioValor = document.getElementById("promedioValor");
-    const formMatricula = terceroSelect.closest("form");
 
-    terceroSelect.addEventListener("change", function () {
-        const estudianteId = this.value;
-
-        promedioContainer.classList.add("d-none");
-        promedioContainer.classList.remove("alert-danger", "alert-info", "alert-warning");
-        mensaje.textContent = "";
-        btnMatricular.disabled = false;
-
-        if (estudianteId) {
-            fetch(`/matriculas/promedio/${estudianteId}`)
-                .then(response => response.json())
-                .then(promedio => {
-                    promedioContainer.classList.remove("d-none");
-                    promedioValor.textContent = promedio.toFixed(2);
-
-                    if (promedio > 0 && promedio < 3.0) {
-                        promedioContainer.classList.add("alert-danger");
-                        mensaje.textContent = "⚠️ Atención: El estudiante se encuentra en prueba condicional por promedio inferior a 3.0.";
-                        mensaje.className = "mt-4 text-center fw-bold text-danger";
-                    } else if (promedio === 0) {
-                        promedioContainer.classList.add("alert-warning");
-                        mensaje.textContent = "Estudiante nuevo (Sin promedio calculado).";
-                        mensaje.className = "mt-4 text-center fw-bold text-warning";
-                    } else {
-                        promedioContainer.classList.add("alert-info");
-                        mensaje.textContent = "✅ Estudiante apto para pre-matrícula.";
-                        mensaje.className = "mt-4 text-center fw-bold text-primary";
-                    }
-                })
-                .catch(err => console.error("Error al obtener promedio:", err));
-        }
-    });
-
-    if (programaSelect) {
+    // 1. Cargar Pensums al cambiar el Programa
+    if (programaSelect && pensumSelect) {
         programaSelect.addEventListener("change", function () {
             const programaId = this.value;
             pensumSelect.innerHTML = '<option value="">Cargando pensums...</option>';
             pensumSelect.disabled = true;
-            mensaje.textContent = "";
 
             if (!programaId) {
                 pensumSelect.innerHTML = '<option value="">Seleccione primero un programa</option>';
                 return;
             }
 
-            fetch(`/matriculas/pensums/${programaId}`)
+            fetch(`/prematricula/pensums/${programaId}`)
                 .then(response => {
                     if (!response.ok) throw new Error("Error en red");
                     return response.json();
@@ -247,39 +295,114 @@ document.addEventListener("DOMContentLoaded", function () {
                     pensumSelect.innerHTML = '<option value="">Seleccione un pensum</option>';
                     if (pensums.length === 0) {
                         pensumSelect.innerHTML = '<option value="">No hay pensums disponibles</option>';
-                        mensaje.textContent = "El programa seleccionado no tiene pensums registrados.";
-                        mensaje.className = "mt-4 text-center fw-bold text-danger";
                         pensumSelect.disabled = true;
                         return;
                     }
                     pensums.forEach(pensum => {
                         const option = document.createElement("option");
                         option.value = pensum.id;
-                        option.textContent = `${pensum.id} - Periodo ${pensum.periodo}`;
+                        option.textContent = `Pensum ID: ${pensum.id} - Periodo: ${pensum.periodo}`;
                         pensumSelect.appendChild(option);
                     });
                     pensumSelect.disabled = false;
                 })
                 .catch(error => {
+                    console.error("Error cargando pensums:", error);
                     pensumSelect.innerHTML = '<option value="">Error cargando pensums</option>';
                     pensumSelect.disabled = true;
-                    mensaje.textContent = "Ocurrió un error al cargar los pensums.";
-                    mensaje.className = "mt-4 text-center fw-bold text-danger";
                 });
         });
     }
 
-    if (formMatricula) {
-        formMatricula.addEventListener("submit", function (event) {
-            if (!terceroSelect.value || !programaSelect.value || !pensumSelect.value) {
-                event.preventDefault();
-                alert("Debe completar todos los campos obligatorios (Estudiante, Programa y Pensum).");
+    // 2. Acción del botón "Asignar Pensums" (Usando Procedimiento Almacenado)
+    const btnMatricularAccion = document.getElementById("btnMatricularAccion");
+    if (btnMatricularAccion) {
+        btnMatricularAccion.addEventListener("click", function () {
+            const estudianteId = $("#terceroId").val();
+            const programaId = $("#programaId").val();
+            const pensumId = $("#pensumId").val();
+
+            if (!estudianteId || !programaId || !pensumId) {
+                alert("Por favor seleccione el estudiante, el programa y el pensum.");
+                return;
             }
+
+            // Cambiar el estado del botón mientras carga
+            let textoOriginal = btnMatricularAccion.innerText;
+            btnMatricularAccion.innerText = "Asignando...";
+            btnMatricularAccion.disabled = true;
+
+            // Enviar la petición POST al nuevo endpoint del controlador
+            $.post('/prematricula/api/asignar-pensum', {
+                estudianteId: estudianteId,
+                pensumId: pensumId
+            })
+                .done(function (respuestaDelServidor) {
+                    console.log(respuestaDelServidor);
+
+                    // Si la asignación fue exitosa, consultamos la base de datos para refrescar la tabla
+                    $.get(`/prematricula/api/terc-pensum/${estudianteId}`, function (data) {
+                        let html = "";
+                        if (data && data.length > 0) {
+                            data.forEach(item => {
+                                html += `<tr>
+                                <td class="fw-bold">${item.pensId}</td>
+                                <td>${item.tercId}</td>
+                                <td>${item.tepePeriodo}</td>
+                                <td><button type="button" class="btn btn-dark btn-sm fw-bold px-3" onclick="examinarDetalle(${item.tercId})">Examina</button></td>
+                            </tr>`;
+                            });
+                        } else {
+                            html = `<tr><td colspan="4" class="text-center text-muted">Aún no hay registros.</td></tr>`;
+                        }
+
+                        // Actualizamos la vista
+                        $("#tbodyTercPensum").html(html);
+                        $("#divTercPensum").removeClass("d-none");
+                        $("#divDetalleAsignaturas").addClass("d-none");
+
+                        // Restauramos el botón
+                        btnMatricularAccion.innerText = textoOriginal;
+                        btnMatricularAccion.disabled = false;
+                    });
+                })
+                .fail(function (jqXHR) {
+                    // Si el controlador devuelve un error (ej. Ya estaba asignado)
+                    alert(jqXHR.responseText || "Error de comunicación con el servidor.");
+                    btnMatricularAccion.innerText = textoOriginal;
+                    btnMatricularAccion.disabled = false;
+                });
         });
     }
 });
 
-// 5. Ordenamiento de tablas (Función global para informes)
+// 3. Función global para el botón "Examina" (Muestra la tabla final detallada)
+function examinarDetalle(estudianteId) {
+    $.get(`/prematricula/api/detalle-asignaturas/${estudianteId}`, function (data) {
+        let html = "";
+        let total = data ? data.length : 0;
+
+        if (total > 0) {
+            data.forEach(det => {
+                html += `<tr>
+                    <td class="fw-bold text-primary">${det.periodo}</td>
+                    <td>${det.docenteAsignado}</td>
+                    <td>${det.asigNombre}</td>
+                </tr>`;
+            });
+        } else {
+            html = `<tr><td colspan="3" class="text-center text-muted py-3">No hay asignaturas registradas.</td></tr>`;
+        }
+
+        $("#tbodyDetalleAsignaturas").html(html);
+        $("#badgeTotalAsignaturas").text(total);
+        $("#divDetalleAsignaturas").removeClass("d-none");
+
+        document.getElementById("divDetalleAsignaturas").scrollIntoView({ behavior: 'smooth' });
+    });
+}
+
+/* ==================== ORDENAMIENTO DE TABLAS ==================== */
 function sortTable(n) {
     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
     table = document.getElementById("reportTable");

@@ -1,14 +1,21 @@
 package com.BasesDeDatos.demo.controller;
 
+import com.BasesDeDatos.demo.dto.DetallePreMatriculaDTO;
+import com.BasesDeDatos.demo.dto.TercPensumDTO;
+import com.BasesDeDatos.demo.model.Pensum;
 import com.BasesDeDatos.demo.repository.PreMatriculaRepository;
-import com.BasesDeDatos.demo.repository.ProgramaRepository;
+import com.BasesDeDatos.demo.service.PensumService;
+import com.BasesDeDatos.demo.service.ProgramaService;
+import com.BasesDeDatos.demo.service.TerceroService;
+import com.BasesDeDatos.demo.service.TercPensumService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/prematricula")
@@ -18,25 +25,70 @@ public class PreMatriculaController {
     private PreMatriculaRepository preMatriculaRepository;
     
     @Autowired
-    private ProgramaRepository programaRepository;
+    private ProgramaService programaService;
 
-    // Muestra la vista y carga la lista real de programas para el selector
+    @Autowired
+    private TerceroService terceroService;
+
+    @Autowired
+    private PensumService pensumService;
+
+    @Autowired
+    private TercPensumService tercPensumService;
+
     @GetMapping
     public String mostrarPantallaPreMatricula(Model model) {
-        model.addAttribute("programas", programaRepository.findAll());
+        model.addAttribute("programas", programaService.listarTodos());
+        model.addAttribute("estudiantes", terceroService.listarTodos());
         return "pre_matricula";
     }
 
-    // Procesa el formulario y ejecuta el Procedimiento Almacenado por lotes
     @PostMapping("/generar")
     public String ejecutarProcesoPreMatricula(
             @RequestParam("programaId") Long programaId,
             @RequestParam("periodo") String periodo) {
-
-        // Invoca el SP en Oracle pasándole el ID del programa y el periodo digitado
         preMatriculaRepository.generarPreMatriculaBatch(programaId, periodo);
-        
-        // Redirige de vuelta a la misma vista con una señal de éxito
         return "redirect:/prematricula?exito=true"; 
+    }
+
+    @GetMapping("/pensums/{programaId}")
+    @ResponseBody
+    public List<Pensum> obtenerPensumsPorPrograma(@PathVariable Long programaId) {
+        return pensumService.listarPorPrograma(programaId);
+    }
+
+    @GetMapping("/api/terc-pensum/{estudianteId}")
+    @ResponseBody
+    public List<TercPensumDTO> obtenerTercPensum(@PathVariable Long estudianteId) {
+        return preMatriculaRepository.consultarTercPensum(estudianteId);
+    }
+
+    @GetMapping("/api/detalle-asignaturas/{estudianteId}")
+    @ResponseBody
+    public List<DetallePreMatriculaDTO> obtenerDetalleAsignaturas(@PathVariable Long estudianteId) {
+        return preMatriculaRepository.consultarDetalleAsignaturas(estudianteId);
+    }
+
+    // MÉTODO POST CORREGIDO: Llama a tu servicio que ejecuta el Procedimiento Almacenado
+    @PostMapping("/api/asignar-pensum")
+    @ResponseBody
+    public ResponseEntity<String> asignarPensum(
+            @RequestParam("estudianteId") Long estudianteId,
+            @RequestParam("pensumId") Long pensumId) {
+        
+        try {
+            // Ejecutamos tu servicio
+            boolean exito = tercPensumService.registrarMatricula(estudianteId, pensumId);
+            
+            if (exito) {
+                return ResponseEntity.ok("Asignación guardada correctamente");
+            } else {
+                return ResponseEntity.badRequest().body("El estudiante ya tiene este pensum asignado.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); 
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al ejecutar el procedimiento almacenado: " + e.getMessage());
+        }
     }
 }
