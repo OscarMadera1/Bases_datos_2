@@ -39,7 +39,7 @@ public class PreMatriculaController {
     @GetMapping
     public String mostrarPantallaPreMatricula(Model model) {
         model.addAttribute("programas", programaService.listarTodos());
-        model.addAttribute("estudiantes", terceroService.listarTodos());
+        model.addAttribute("estudiantes", terceroService.listarTodosPorTipo("0"));
         return "pre_matricula";
     }
 

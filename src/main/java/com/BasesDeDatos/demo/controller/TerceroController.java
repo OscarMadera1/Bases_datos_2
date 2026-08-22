@@ -16,11 +16,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/terceros")
 public class TerceroController {
-    //Inyeccion del servicio para acceder a metodos y BD
+    //Inyección del servicio para acceder a métodos y BD
     @Autowired
     private TerceroService terceroService;
 
-    //Metodo para mostrar la lista de terceros y el formulario
+    //Método para mostrar la lista de terceros y el formulario
     @GetMapping
     public String listarTerceros(Model model){
         //Pasa la lista de terceros de la BD a la vista
@@ -29,24 +29,23 @@ public class TerceroController {
         return "terceros";
     }
 
-    //Metodo para procesar envio del formulario y guardar en BD
+    //Método para procesar envío del formulario y guardar en BD
     @PostMapping("/guardar")
-    public String guardarTercero(@ModelAttribute("tercero") Tercero tercero){
-        // Ejecuta el procedimiento de almacenado
-        terceroService.guardarTercero(tercero);
+    public String guardarTercero(@ModelAttribute("tercero") Tercero tercero, RedirectAttributes redirectAttributes){
 
-        
+        // Ejecuta el procedimiento de almacenado
+        try{
+            terceroService.guardarTercero(tercero);
+            redirectAttributes.addFlashAttribute("mensajeExito", "Tercero guardado correctamente.");
+        } catch (JpaSystemException e) {
+            String mensajeError = extraerMensajeOra(e);
+            redirectAttributes.addFlashAttribute("mensajeError", mensajeError);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensajeError", "Ocurrió un error inesperado al guardar.");
+        }
         //Redirige a la lista
         return "redirect:/terceros";
     }
-
-   /* //Metodo para actualizar datos desde la web
-    @PostMapping("/actualizar") // lo añadí para evitar que sobrescriba el controlador general
-    public String actualizarTercero(@ModelAttribute("tercero") Tercero tercero){
-        terceroService.actualizarTercero(tercero);
-        return "redirect:/terceros";
-    }
-    */
 
     @PostMapping("/actualizar")
     public String actualizarTercero(
@@ -67,6 +66,26 @@ public class TerceroController {
         return "redirect:/terceros";
     }
 
+
+    //Eliminar un tercero por su ID
+
+    @GetMapping("/eliminar/{id}")
+    public String eliminarTercero(@PathVariable("id") Long id, RedirectAttributes redirectAttributes){
+
+        try {
+            terceroService.eliminarTercero(id);
+            redirectAttributes.addFlashAttribute("mensajeExito", "Tercero eliminado correctamente.");
+        } catch (JpaSystemException e) {
+            String mensajeError = extraerMensajeOra(e);
+            redirectAttributes.addFlashAttribute("mensajeError", mensajeError);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensajeError", "Ocurrió un error inesperado al eliminar.");
+        }
+
+        return "redirect:/terceros";
+    }
+
+
     private String extraerMensajeOra(Exception e) {
         Throwable cause = e.getCause();
         while (cause != null) {
@@ -84,13 +103,5 @@ public class TerceroController {
             cause = cause.getCause();
         }
         return "No se permite la actualización fuera del horario o días laborales.";
-    }
-
-
-    //Eliminar un tercero por su ID
-    @GetMapping("/eliminar/{id}")
-    public String eliminarTercero(@PathVariable("id") Long id){
-        terceroService.eliminarTercero(id);
-        return "redirect:/terceros";
     }
 }
