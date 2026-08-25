@@ -14,11 +14,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import com.BasesDeDatos.demo.dto.MateriaFaltanteDTO;
 
 import java.util.List;
 
 @Controller
-@RequestMapping("/prematricula")
 public class PreMatriculaController {
 
     @Autowired
@@ -36,14 +36,31 @@ public class PreMatriculaController {
     @Autowired
     private TercPensumService tercPensumService;
 
-    @GetMapping
+    // ==========================================
+    // VISTAS (PANTALLAS)
+    // ==========================================
+
+    // 1. Pantalla de Asignar Pensum (El módulo anterior)
+    @GetMapping("/asignarPensum")
+    public String mostrarPantallaAsignarPensum(Model model) {
+        model.addAttribute("programas", programaService.listarTodos());
+        model.addAttribute("estudiantes", terceroService.listarTodosPorTipo("0"));
+        return "asignar_pensum";
+    }
+
+    // 2. Pantalla de Pre-Matrícula (El nuevo módulo de Malla Curricular)
+    @GetMapping("/prematricula")
     public String mostrarPantallaPreMatricula(Model model) {
         model.addAttribute("programas", programaService.listarTodos());
         model.addAttribute("estudiantes", terceroService.listarTodosPorTipo("0"));
         return "pre_matricula";
     }
 
-    @PostMapping("/generar")
+    // ==========================================
+    // API REST (Usadas por JavaScript / app.js)
+    // ==========================================
+
+    @PostMapping("/prematricula/generar")
     public String ejecutarProcesoPreMatricula(
             @RequestParam("programaId") Long programaId,
             @RequestParam("periodo") String periodo) {
@@ -51,33 +68,31 @@ public class PreMatriculaController {
         return "redirect:/prematricula?exito=true"; 
     }
 
-    @GetMapping("/pensums/{programaId}")
+    @GetMapping("/prematricula/pensums/{programaId}")
     @ResponseBody
     public List<Pensum> obtenerPensumsPorPrograma(@PathVariable Long programaId) {
         return pensumService.listarPorPrograma(programaId);
     }
 
-    @GetMapping("/api/terc-pensum/{estudianteId}")
+    @GetMapping("/prematricula/api/terc-pensum/{estudianteId}")
     @ResponseBody
     public List<TercPensumDTO> obtenerTercPensum(@PathVariable Long estudianteId) {
         return preMatriculaRepository.consultarTercPensum(estudianteId);
     }
 
-    @GetMapping("/api/detalle-asignaturas/{estudianteId}")
+    @GetMapping("/prematricula/api/detalle-asignaturas/{estudianteId}")
     @ResponseBody
     public List<DetallePreMatriculaDTO> obtenerDetalleAsignaturas(@PathVariable Long estudianteId) {
         return preMatriculaRepository.consultarDetalleAsignaturas(estudianteId);
     }
 
-    // MÉTODO POST CORREGIDO: Llama a tu servicio que ejecuta el Procedimiento Almacenado
-    @PostMapping("/api/asignar-pensum")
+    @PostMapping("/prematricula/api/asignar-pensum")
     @ResponseBody
     public ResponseEntity<String> asignarPensum(
             @RequestParam("estudianteId") Long estudianteId,
             @RequestParam("pensumId") Long pensumId) {
         
         try {
-            // Ejecutamos tu servicio
             boolean exito = tercPensumService.registrarMatricula(estudianteId, pensumId);
             
             if (exito) {
@@ -90,5 +105,13 @@ public class PreMatriculaController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al ejecutar el procedimiento almacenado: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/prematricula/api/materias-faltantes")
+    @ResponseBody
+    public List<MateriaFaltanteDTO> obtenerMateriasFaltantes(
+            @RequestParam("pensumId") Long pensumId,
+            @RequestParam("estudianteId") Long estudianteId) {
+        return preMatriculaRepository.consultarMateriasFaltantes(pensumId, estudianteId);
     }
 }
