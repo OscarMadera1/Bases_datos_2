@@ -1,8 +1,9 @@
 package com.BasesDeDatos.demo.controller;
 
 import com.BasesDeDatos.demo.dto.AuditoriaDTO;
-import com.BasesDeDatos.demo.dto.PreMatriculaDTO;
+import com.BasesDeDatos.demo.dto.MateriaFaltanteDTO;
 import com.BasesDeDatos.demo.dto.PromedioDTO;
+import com.BasesDeDatos.demo.dto.TercPensumDTO;
 import com.BasesDeDatos.demo.repository.PreMatriculaRepository;
 import com.BasesDeDatos.demo.service.TerceroService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,24 +43,32 @@ public class InformesController {
             model.addAttribute("auditorias", auditorias);
         }
         else if ("prematricula".equals(tipo) && estudianteId != null) {
-            List<PreMatriculaDTO> materias = preMatriculaRepository.consultarPreMatriculaPorEstudiante(estudianteId);
-            model.addAttribute("materias", materias);
             model.addAttribute("estudianteSeleccionado", estudianteId);
+            
+            // 1. Obtener el pensum asignado al estudiante
+            List<TercPensumDTO> asignaciones = preMatriculaRepository.consultarTercPensum(estudianteId);
+            
+            if (asignaciones != null && !asignaciones.isEmpty()) {
+                Long pensumId = asignaciones.get(0).getPensId();
+                // 2. Consultar materias faltantes
+                List<MateriaFaltanteDTO> materias = preMatriculaRepository.consultarMateriasFaltantes(pensumId, estudianteId);
+                model.addAttribute("materias", materias);
+            } else {
+                model.addAttribute("errorPensum", true); // Bandera si no tiene pensum asignado
+            }
         }
 
         return "informes";
     }
 
     // =========================================================================
-    // 2. Nueva pantalla: Administrar Promedios (URL: http://localhost:8090/promedios)
+    // 2. Nueva pantalla: Administrar Promedios
     // =========================================================================
     @GetMapping("/promedios")
     public String administrarPromedios(Model model) {
-        // Carga la lista de estudiantes para el selector
         model.addAttribute("estudiantes", terceroService.listarTodosPorTipo("0"));
-        // Carga la tabla general para mostrarla debajo
         model.addAttribute("promedios", preMatriculaRepository.consultarVistaPromedios());
-        return "administrar_promedios"; // Retorna una nueva vista HTML
+        return "administrar_promedios"; 
     }
 
     // =========================================================================

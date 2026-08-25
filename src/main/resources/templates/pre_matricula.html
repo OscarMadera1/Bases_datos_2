@@ -6,116 +6,85 @@
     <title>Pre-Matrícula | Sistema de Gestión Académica</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/style.css}">
+    <style>
+        .semestre-header { background-color: #0d6efd; color: white; padding: 10px 15px; font-weight: bold; cursor: pointer; border-radius: 5px; margin-bottom: 5px; display: flex; justify-content: space-between; }
+        .asignatura-item { background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #0d6efd; margin-bottom: 3px; border-radius: 4px; }
+        .asignatura-item:hover { background-color: #e9ecef; }
+        .filtro-btn.active { background-color: #0d6efd; color: white; border-color: #0d6efd; }
+    </style>
 </head>
 <body>
-    <div class="container py-5">
-        <!-- Reloj y navegación -->
+    <div class="container py-4">
         <div class="d-flex justify-content-end mb-2">
             <div id="liveClock" class="reloj-institucional text-end">Cargando fecha y hora...</div>
         </div>
-        <a th:href="@{/portalMatricula}" class="text-decoration-none text-white-50 mb-3 d-inline-block">&larr; Volver al portal Matrícula</a>
+        <a th:href="@{/portalMatricula}" class="text-decoration-none text-white-50 mb-3 d-inline-block">&larr; Volver al portal</a>
 
-        <!-- Cabecera Institucional -->
-        <div class="text-center text-white mb-5">
-            <span class="badge bg-primary px-3 py-2 mb-2 text-uppercase tracking-wider">Corporación Universitaria Remington</span>
-            <h1 class="display-5 fw-bold">Gestión de Pre-Matrícula</h1>
-            <p class="lead text-light opacity-75">Proceso y asignación académica por estudiante</p>
+        <div class="text-center text-white mb-4">
+            <span class="badge bg-primary px-3 py-2 mb-2 text-uppercase tracking-wider">Módulo Académico</span>
+            <h1 class="display-6 fw-bold">Pre-Matrícula de Estudiantes</h1>
+            <p class="lead text-light opacity-75 fs-6">Consulte las materias pendientes por cursar de un estudiante.</p>
         </div>
 
-        <!-- NIVEL 1: TARJETA PRINCIPAL (FORMULARIO) -->
+        <!-- FILTROS DE BÚSQUEDA -->
         <div class="card card-menu card-glass shadow border-0 p-4 mb-4">
-            <h4 class="h5 fw-bold text-primary border-bottom pb-2 mb-3">Información del Estudiante</h4>
-            <form id="formMatriculaProceso">
-                <div class="row g-3">
-                    <!-- Contenedor dinámico de Promedio -->
-                    <div id="promedioContainer" class="alert d-none mt-3 d-flex justify-content-between align-items-center border">
-                        <div>
-                            <span id="mensaje" class="fw-medium">Cálculo completado.</span>
-                            <strong class="ms-2">Promedio Actual: <span id="promedioValor" class="fs-5 text-primary"></span></strong>
-                        </div>
-                        <a th:href="@{/informes(tipo='promedios')}" class="btn btn-sm btn-dark fw-bold px-3">Ver Informe de Promedios</a>
-                    </div>
-
-                    <!-- Selector de estudiante con el nuevo botón -->
-                    <div class="col-md-12 d-flex align-items-end gap-2">
-                        <div class="flex-grow-1">
-                            <label for="terceroId" class="form-label fw-bold small text-muted">Estudiante *</label>
-                            <select id="terceroId" name="terceroId" class="form-select" required>
-                                <option value="">Seleccione un estudiante</option>
-                                <option th:each="est : ${estudiantes}" th:value="${est.id}"
-                                    th:text="${est.nroDoc + ' - ' + est.nombres + ' ' + est.apellidos}">
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label for="programaId" class="form-label fw-bold small text-muted">Programa *</label>
-                        <select id="programaId" name="programaId" class="form-select" required>
-                            <option value="">Seleccione un programa</option>
-                            <option th:each="prog : ${programas}" th:value="${prog.id}" th:text="${prog.nombre}"></option>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold text-dark small mb-1">1. Seleccione Estudiante:</label>
+                    <select id="estudianteSelect" class="form-select">
+                        <option value="">Seleccione...</option>
+                        <option th:each="est : ${estudiantes}" th:value="${est.id}"
+                            th:text="${est.nroDoc + ' - ' + est.nombres + ' ' + est.apellidos}">
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold text-dark small mb-1">2. Programa Académico:</label>
+                    <select id="programaSelect" class="form-select">
+                        <option value="">Seleccione programa...</option>
+                        <option th:each="prog : ${programas}" th:value="${prog.id}" th:text="${prog.nombre}"></option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold text-dark small mb-1">3. Pensum Asignado:</label>
+                    <div class="input-group">
+                        <select id="pensumSelect" class="form-select" disabled>
+                            <option value="">Esperando programa...</option>
                         </select>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label for="pensumId" class="form-label fw-bold small text-muted">Plan de Estudio (Versión Pensum) *</label>
-                        <select id="pensumId" name="pensumId" class="form-select" required>
-                            <option value="">Seleccione primero un programa</option>
-                        </select>
+                        <button id="btnConsultarFaltantes" class="btn btn-primary fw-bold px-4">Consultar</button>
                     </div>
                 </div>
-
-                <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
-                    <a th:href="@{/portalMatricula}" class="btn btn-outline-secondary">&larr; Volver al portal Matrícula</a>
-                    <button type="button" id="btnMatricularAccion" class="btn btn-primary fw-bold px-4">Asignar Pensums</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- NIVEL 2: DIV INTERMEDIO (TERC_PENSUMS) -->
-        <div id="divTercPensum" class="card card-menu card-glass shadow border-0 p-4 mb-4 d-none">
-            <h4 class="h5 fw-bold text-secondary border-bottom pb-2 mb-3">Información de Pensum del Estudiante (Terc_Pensums)</h4>
-            <div class="table-responsive">
-                <table class="table table-bordered align-middle mb-0 bg-white text-center">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>PENS_ID</th>
-                            <th>TERC_ID</th>
-                            <th>TEPE_PERIODOS</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbodyTercPensum">
-                        <!-- Datos cargados por AJAX -->
-                    </tbody>
-                </table>
             </div>
         </div>
 
-        <!-- NIVEL 3: DIV FINAL (ASIGNATURAS Y DOCENTES) -->
-        <div id="divDetalleAsignaturas" class="card card-menu card-glass shadow border-0 p-4 mb-4 d-none">
-            <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
-                <h4 class="h5 fw-bold text-success m-0">Asignaturas Matriculadas</h4>
-                <span class="badge bg-success" id="badgeTotalAsignaturas">0</span>
+        <!-- ÁREA DE RESULTADOS -->
+        <div id="areaResultados" class="card card-menu card-glass shadow border-0 p-4 d-none">
+            
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+                <div>
+                    <h4 class="fw-bold text-primary mb-1">Materias Pendientes</h4>
+                    <p class="text-muted small mb-0">Estudiante: <strong id="nombreEstudianteRes"></strong></p>
+                </div>
+                <span class="badge bg-danger fs-6" id="totalPendientesBadge">0 Pendientes</span>
             </div>
-            <p class="text-muted small">Lista de asignaturas que el estudiante seleccionado ya tiene registradas.</p>
-            <div class="table-responsive">
-                <table class="table table-striped table-hover align-middle mb-0 bg-white">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Periodo</th>
-                            <th>Docente Asignado</th>
-                            <th>Nombre de la Asignatura</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbodyDetalleAsignaturas">
-                        <!-- Datos cargados por AJAX -->
-                    </tbody>
-                </table>
+
+            <!-- Controles de Tabla: Buscador y Botones de Filtro -->
+            <div class="row mb-4 align-items-center">
+                <div class="col-md-5">
+                    <input type="text" id="buscadorMaterias" class="form-control" placeholder="🔍 Buscar materia o código...">
+                </div>
+                <div class="col-md-7 text-end" id="botonesFiltroNivel">
+                    <!-- Los botones de los semestres se generan dinámicamente aquí -->
+                </div>
+            </div>
+
+            <!-- Contenedor del Acordeón / Lista -->
+            <div id="contenedorMaterias">
+                <!-- Data inyectada por JS -->
             </div>
         </div>
     </div>
-    <!-- Scripts -->
+
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script th:src="@{/app.js}"></script>

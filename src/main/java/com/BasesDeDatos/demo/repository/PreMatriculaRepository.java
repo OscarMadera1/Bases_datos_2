@@ -7,6 +7,7 @@ import com.BasesDeDatos.demo.dto.TercPensumDTO;
 import com.BasesDeDatos.demo.dto.DetallePreMatriculaDTO;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import com.BasesDeDatos.demo.dto.MateriaFaltanteDTO;
 
 import java.util.List;
 
@@ -139,4 +140,30 @@ public class PreMatriculaRepository {
             return dto;
         });
     }
+
+ public List<MateriaFaltanteDTO> consultarMateriasFaltantes(Long pensumId, Long estudianteId) {
+        String sql = """
+            SELECT dp.DETAPE_NIVEL AS NIVEL, a.ASIG_CODIGO, a.ASIG_ASIGNATURA, a.ASIG_CREDITOS
+            FROM DETALLE_PENSUMS dp
+            JOIN ASIGNATURAS a ON dp.ASIG_ID = a.ASIG_ID
+            WHERE dp.PENS_ID = ?
+              AND a.ASIG_ID NOT IN (
+                  SELECT c.ASIG_ID
+                  FROM HISTORIAS h
+                  JOIN CURSOS c ON h.CURS_ID = c.CURS_ID
+                  WHERE h.TERC_ID = ?
+              )
+            ORDER BY TO_NUMBER(dp.DETAPE_NIVEL), a.ASIG_ASIGNATURA
+        """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            MateriaFaltanteDTO dto = new MateriaFaltanteDTO();
+            dto.setNivel(rs.getString("NIVEL"));
+            dto.setCodigo(rs.getString("ASIG_CODIGO"));
+            dto.setNombre(rs.getString("ASIG_ASIGNATURA"));
+            dto.setCreditos(rs.getInt("ASIG_CREDITOS"));
+            return dto;
+        }, pensumId, estudianteId);
+    }
+    
 }
